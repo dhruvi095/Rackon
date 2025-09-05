@@ -6,15 +6,21 @@ from bookings.models import Booking
 from django.db.models import Sum, Count
 import datetime
 
+# 👇 import the custom role-based permissions
+from users.permissions import IsOwner, IsBrand  
+
 
 class OwnerDashboardView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # ⬅️ Only allow authenticated + owners
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get(self, request):
         user = request.user
         shelves = Shelf.objects.filter(owner=user)
         total_shelves = shelves.count()
-        total_revenue = Booking.objects.filter(shelf__owner=user, status='accepted').aggregate(Sum('shelf__rent'))['shelf__rent__sum'] or 0
+        total_revenue = Booking.objects.filter(
+            shelf__owner=user, status='accepted'
+        ).aggregate(Sum('shelf__rent'))['shelf__rent__sum'] or 0
         bookings_count = Booking.objects.filter(shelf__owner=user).values('status').annotate(count=Count('id'))
         recent_bookings = Booking.objects.filter(shelf__owner=user).order_by('-created_at')[:5]
 
@@ -31,14 +37,18 @@ class OwnerDashboardView(APIView):
             } for b in recent_bookings]
         })
 
+
 class BrandDashboardView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # ⬅️ Only allow authenticated + brands
+    permission_classes = [permissions.IsAuthenticated, IsBrand]
 
     def get(self, request):
         user = request.user
         bookings = Booking.objects.filter(brand=user)
         total_shelves_booked = bookings.values('shelf').distinct().count()
-        total_amount_spent = bookings.filter(status='accepted').aggregate(Sum('shelf__rent'))['shelf__rent__sum'] or 0
+        total_amount_spent = bookings.filter(
+            status='accepted'
+        ).aggregate(Sum('shelf__rent'))['shelf__rent__sum'] or 0
         active_bookings = bookings.filter(status='accepted', end_date__gte=datetime.date.today())
         recent_bookings = bookings.order_by('-created_at')[:5]
 

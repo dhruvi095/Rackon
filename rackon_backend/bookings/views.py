@@ -1,11 +1,14 @@
 from rest_framework import generics, permissions
-from .models import *
+from .models import Booking
 from rest_framework.exceptions import PermissionDenied
-from .serializers import *
-from .permissions import *
+from .serializers import BookingSerializer, BookingStatusSerializer
+from .permissions import IsBookingOwnerOrReadOnly, IsRetailerShelfOwner
 from django.utils.timezone import now
-from django.db.models import Q, Prefetch
+from django.db.models import Prefetch
 from shelves.models import Shelf
+
+# 👇 Import role-based permissions
+from users.permissions import IsOwner, IsBrand
 
 
 class BookingListCreateView(generics.ListCreateAPIView):
@@ -13,38 +16,34 @@ class BookingListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        
-        # auto-expire old booking 
-        
         today = now().date()
         Booking.objects.filter(
             end_date__lt=today,
             status__in=['pending', 'accepted']
         ).update(status='expired')
-        
+
         user = self.request.user
-        if getattr(user, "is_retailer", False):
-            # Retailers see bookings for their shelves
+        if user.role == "owner":
             qs = Booking.objects.filter(shelf__owner=user)
-        else:
-            # Brands see their own bookings
+        else:  # brand
             qs = Booking.objects.filter(brand=user)
-            
-        qs = qs.select_related('shelf', 'brand').prefetch_related(
+
+        return qs.select_related('shelf', 'brand').prefetch_related(
             Prefetch('shelf__images')
         ).order_by('-created_at')
-        return qs
-            
-            
+
     def perform_create(self, serializer):
+        # ✅ Only brands can create bookings
+        if self.request.user.role != "brand":
+            raise PermissionDenied("Only brands can make bookings.")
+
         shelf = serializer.validated_data['shelf']
         start_date = serializer.validated_data['start_date']
         end_date = serializer.validated_data['end_date']
 
-        # Prevent overlapping pending or accepted bookings
         if Booking.objects.filter(
             shelf=shelf,
-            status__in=['pending', 'accepted'],  # ✅ blocks both
+            status__in=['pending', 'accepted'],
             start_date__lte=end_date,
             end_date__gte=start_date
         ).exists():
@@ -59,17 +58,18 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsBookingOwnerOrReadOnly]
 
     def get_object(self):
-        # Auto-expire this booking if outdated
         obj = super().get_object()
         if obj.end_date < now().date() and obj.status in ['pending', 'accepted']:
             obj.status = 'expired'
             obj.save(update_fields=['status'])
         return obj
 
+
 class BookingStatusUpdateView(generics.UpdateAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingStatusSerializer
-    permission_classes = [permissions.IsAuthenticated, IsRetailerShelfOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner, IsRetailerShelfOwner]
+    # ✅ Only owners can update booking status
 
     def perform_update(self, serializer):
         serializer.save()
