@@ -17,18 +17,8 @@ class Payment(models.Model):
         ('sales_commission', 'Sales Commission'),
     )
 
-    booking = models.OneToOneField(
-        Booking, 
-        on_delete=models.CASCADE, 
-        related_name='payment',
-        null=True, 
-        blank=True
-    )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE, 
-        related_name='payments'
-    )
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE, related_name='payment', null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payments')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE, default='booking_fee')
     payment_gateway_id = models.CharField(max_length=255, blank=True, null=True)
