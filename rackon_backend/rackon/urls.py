@@ -35,7 +35,7 @@ urlpatterns = [
     path('api/bookings/', include('bookings.urls')),
     path('api/notifications/', include('notifications.urls')),
     path('api/dashboard/', include('dashboard.urls')),
-    
+    path('api/payments/', include('payments.urls')),
     
     # 📌 Swagger & Redoc
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

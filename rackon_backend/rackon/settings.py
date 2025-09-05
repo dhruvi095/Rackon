@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+# settings.py
+RAZORPAY_KEY_ID = 'your_razorpay_key_id'
+RAZORPAY_KEY_SECRET = 'your_razorpay_key_secret'
+RAZORPAY_WEBHOOK_SECRET = "your_webhook_secret_here"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
