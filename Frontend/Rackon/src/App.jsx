@@ -4,14 +4,10 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import Home from './Components/Home'
 import Header from './Components/Header'
 import Footer from './Components/Footer';
-<<<<<<< HEAD
 import Sign from './Components/Sign'
 import Login from './Components/Login'
 import Reset from './Components/Reset'
 import OTP from './Components/OTP'
-import DsOwner from './Components/DsOwner'
-import History from './Components/History'
-import Payment from './Components/Payment'
 
 
 function Layout({ children }) {
@@ -27,15 +23,10 @@ function Layout({ children }) {
   );
 }
 
-=======
-import DsOwner from './Components/DsOwner';
-import DsBrand from './Components/DsBrand';
->>>>>>> 56a67200ae735717ba40782043d30e05955305b4
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-<<<<<<< HEAD
     <Router>
       <Layout>
         <Routes>
@@ -44,27 +35,9 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Reset" element={<Reset />} />
           <Route path="/OTP" element={<OTP />} />
-<<<<<<< HEAD
           
-=======
-          <Route path="/owner" element={<DsOwner />} />
-          <Route path="/History" element={<History />} />
-          <Route path="/Payment" element={<Payment />} />
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
         </Routes>
       </Layout>
-=======
-    <>
-      <Router>
-      {/* Header should be visible on all pages */}
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/owner" element={<DsOwner/>} />
-        <Route path="/brand" element={<DsBrand/>} />
-      </Routes>
-      <Footer/>
->>>>>>> 56a67200ae735717ba40782043d30e05955305b4
     </Router>
   )
 }
