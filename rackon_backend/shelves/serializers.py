@@ -8,6 +8,12 @@ class ShelfImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShelfImage
         fields = ['id', 'image', 'uploaded_at']
+        
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return None
 
 
 class ShelfSerializer(serializers.ModelSerializer):

@@ -12,7 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-
+from users.permissions import IsOwner
 
 
 class ShelfDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -22,7 +22,7 @@ class ShelfDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]   # Anyone can view shelf details
-        return [IsShelfOwnerOrReadOnly()]   # Only owners can update/delete
+        return [IsAuthenticated(), IsOwner(),IsShelfOwnerOrReadOnly()]   # Only owners can update/delete
 
     def perform_update(self, serializer):
         # Prevent changing the owner accidentally
@@ -31,7 +31,7 @@ class ShelfDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class ShelfImageUploadView(generics.CreateAPIView):
     serializer_class = ShelfImageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     parser_classes = [MultiPartParser, FormParser]  # needed for file uploads
 
     def post(self, request, *args, **kwargs):
@@ -66,7 +66,7 @@ class ShelfImageUploadView(generics.CreateAPIView):
 class ShelfImageDeleteView(generics.DestroyAPIView):
     queryset = ShelfImage.objects.all()
     serializer_class = ShelfImageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def delete(self, request, *args, **kwargs):
         image = self.get_object()
@@ -90,7 +90,7 @@ class ShelfListCreateView(generics.ListCreateAPIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]   # Anyone can view the list of shelves
-        return [IsAuthenticated()]   # Only logged-in users can create shelves
+        return [IsAuthenticated(), IsOwner()]   # Only logged-in users can create shelves
 
     def get_queryset(self):
         qs = Shelf.objects.select_related("owner").prefetch_related("images")
