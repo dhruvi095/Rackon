@@ -1,7 +1,11 @@
 from rest_framework import serializers
-from .models import User
+from .models import *
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import serializers
+from .models import User, PasswordResetOTP
+from django.contrib.auth.password_validation import validate_password
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -52,3 +56,18 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             "profile_image": profile_image_url
         }
         return data
+    
+    
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+class OTPVerifySerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    otp = serializers.CharField(max_length=6, required=True)
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    otp = serializers.CharField(max_length=6, required=True)
+    new_password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+ 
