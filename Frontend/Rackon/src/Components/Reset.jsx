@@ -1,17 +1,25 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Reset = () => {
+  const navigate = useNavigate();
+
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    navigate("/otp"); // Redirects to OTP page
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-black via-gray-900 to-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6">
-        {/* Logo / Heading */}
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
+        {/* Heading */}
         <div className="text-center">
           <h1 className="text-3xl font-bold text-blue-600">Rackon</h1>
-          <p className="mt-2 text-gray-600">Login to access your account</p>
+          <p className="mt-2 text-gray-600">Reset your password</p>
         </div>
 
-        {/* Form */}
-        <form className="space-y-5">
+        {/* Reset Password Form */}
+        <form onSubmit={handleSendOtp} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Email Address
@@ -25,7 +33,7 @@ const Login = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Password
+              New Password
             </label>
             <input
               type="password"
@@ -34,31 +42,31 @@ const Login = () => {
             />
           </div>
 
-          {/* Remember Me + Forgot Password */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="h-4 w-4 text-blue-600" />
-              <span className="text-gray-600">Remember me</span>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Confirm Password
             </label>
-            <a href="/Reset" className="text-blue-600 hover:underline">
-              Forgot password?
-            </a>
+            <input
+              type="password"
+              placeholder="********"
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            />
           </div>
 
-          {/* Login Button */}
+          {/* Send OTP Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition"
           >
-            Login
+            Send OTP
           </button>
         </form>
 
-        {/* Sign Up Redirect */}
+        {/* Back to Login */}
         <p className="text-center text-sm text-gray-600">
-          Don’t have an account?{" "}
-          <a href="/Sign" className="text-blue-600 hover:underline">
-            Sign up
+          Remember your password?{" "}
+          <a href="/Login" className="text-blue-600 hover:underline">
+            Login
           </a>
         </p>
       </div>
@@ -66,4 +74,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Reset;
