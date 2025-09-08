@@ -27,7 +27,6 @@ function Home() {
   ];
 
   // Fetch shelves from backend
-<<<<<<< HEAD
   const fetchShelves = async (params = {}) => {
     setLoading(true);
     try {
@@ -53,22 +52,6 @@ function Home() {
 
     fetchShelves(params);
   };
-=======
-  useEffect(() => {
-    const fetchShelves = async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/api/shelves/"); // adjust URL if needed
-        setSpaces(response.data.filter((shelf) => shelf.currently_available));
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching shelves:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchShelves();
-  }, []);
->>>>>>> c4a7064ac29aa984ef60cb9397b0b14fabe5a6a8
 
   return (
     <>
@@ -100,7 +83,6 @@ function Home() {
               <input
                 type="text"
                 placeholder="Location"
-<<<<<<< HEAD
                 className="p-2 rounded-lg border w-full sm:w-auto"
                 value={locationInput}
                 onChange={e => setLocationInput(e.target.value)}
@@ -129,41 +111,6 @@ function Home() {
                 className="bg-green-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
                 onClick={handleSearch}
               >
-=======
-                value={locationInput}
-                onChange={(e) => setLocationInput(e.target.value)}
-                className="p-2 rounded-lg border border-white bg-transparent text-white placeholder-white w-full sm:w-auto"
-              />
-              <select
-                value={eventTypeInput}
-                onChange={(e) => setEventTypeInput(e.target.value)}
-                className="p-2 rounded-lg border border-white bg-transparent text-white w-full sm:w-auto"
-              >
-                <option disabled value="">
-                  Type of Event
-                </option>
-                <option className="bg-white text-black">
-                  Retail / Pop-up store
-                </option>
-                <option className="bg-white text-black">
-                  Art Exhibit / Gallery
-                </option>
-                <option className="bg-white text-black">Corporate Event</option>
-              </select>
-              <select
-                value={sizeInput}
-                onChange={(e) => setSizeInput(e.target.value)}
-                className="p-2 rounded-lg border border-white bg-transparent text-white w-full sm:w-auto"
-              >
-                <option disabled value="">
-                  Size
-                </option>
-                <option className="bg-white text-black">Small</option>
-                <option className="bg-white text-black">Medium</option>
-                <option className="bg-white text-black">Large</option>
-              </select>
-              <button className="bg-green-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
->>>>>>> c4a7064ac29aa984ef60cb9397b0b14fabe5a6a8
                 Search
               </button>
             </div>
@@ -200,7 +147,6 @@ function Home() {
             </button>
           </div>
 
-<<<<<<< HEAD
           {loading ? (
             <p>Loading shelves...</p>
           ) : spaces.length === 0 ? (
@@ -210,37 +156,16 @@ function Home() {
               {spaces.map(space => (
                 <div key={space.id} className={`${spaces.length > 3 ? "min-w-[300px] flex-shrink-0 snap-start" : ""} bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden`}>
                   <img src={space.images?.[0]?.image || space.image || "/placeholder.jpg"} alt={space.event_type || "Shelf"} className="w-full h-48 object-cover" />
-=======
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {loading ? (
-              <p>Loading shelves...</p>
-            ) : spaces.length === 0 ? (
-              <p>No available shelves at the moment.</p>
-            ) : (
-              spaces.map((space) => (
-                <div
-                  key={space.id}
-                  className="bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden"
-                >
-                  <img
-                    src={
-                      space.images?.[0]?.image ||
-                      space.image ||
-                      "/placeholder.jpg"
-                    }
-                    alt={space.event_type || "Shelf"}
-                    className="w-full h-48 object-cover"
-                  />
->>>>>>> c4a7064ac29aa984ef60cb9397b0b14fabe5a6a8
                   <div className="p-5">
                     <h3 className="text-lg font-semibold text-gray-800">{space.location}</h3>
                     <p className="text-sm text-gray-600 mt-1">{space.size} • {space.event_type || "General"}</p>
                     <p className="text-green-600 font-semibold mt-2">₹{space.rent} / month</p>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              ))} {/* <-- closing parenthesis for map */}
+            </div>
+          )}
+
         </div>
       </section>
 
