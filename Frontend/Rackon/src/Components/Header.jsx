@@ -16,8 +16,8 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-6 text-gray-700">
             <a href="#" className="hover:text-black">Magazine</a>
             <a href="#" className="hover:text-black">Help</a>
-            <a href="#" className="hover:text-black">Sign up</a>
-            <a href="#" className="hover:text-black">Log in</a>
+            <a href="/Sign" className="hover:text-black">Sign up</a>
+            <a href="/Login" className="hover:text-black">Log in</a>
           </nav>
 
           {/* Mobile Hamburger Button */}
