@@ -1,109 +1,142 @@
-    import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-    const Sign = () => {
-    return (
-        <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
-            {/* Logo / Heading */}
-            <div className="text-center">
-            <h1 className="text-3xl font-bold text-blue-600">Rackon</h1>
-            </div>
+const Sign = () => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("brand");  // Default role
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-            {/* Form */}
-            <form className="space-y-5">
-            <div>
-                <label className="block text-sm font-medium text-gray-700">
-                Full Name
-                </label>
-                <input
-                type="text"
-                placeholder="Enter your full name"
-                className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-                />
-            </div>
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setError("");
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">
-                Email Address
-                </label>
-                <input
-                type="email"
-                placeholder="you@example.com"
-                className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-                />
-            </div>
+    setLoading(true);
+    try {
+      await axios.post("http://localhost:8000/api/auth/register/", {
+        username,
+        email,
+        password,
+        role,  // Send selected role
+      });
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">
-                Password
-                </label>
-                <input
-                type="password"
-                placeholder="********"
-                className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-                />
-            </div>
+      alert("Registration successful! Please login.");
+      navigate("/login");
+    } catch (err) {
+      console.error(err.response?.data); 
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">
-                Confirm Password
-                </label>
-                <input
-                type="password"
-                placeholder="********"
-                className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-                />
-            </div>
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-blue-600">Rackon</h1>
+        </div>
 
-            {/* Sign Up Button */}
-            <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+        {error && <p className="text-red-600 text-sm">{error}</p>}
+
+        <form className="space-y-5" onSubmit={handleSignUp}>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter a unique username"
+              required
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              required
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="********"
+              required
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Register As</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
             >
-                Sign Up
-            </button>
-            </form>
+              <option value="brand">Brand</option>
+              <option value="owner">Shelf Owner</option>
+            </select>
+          </div>
 
-            {/* Divider */}
-            <div className="flex items-center justify-center space-x-2 text-gray-500">
-            <span className="h-px w-16 bg-gray-300"></span>
-            <span className="text-sm">or sign up with</span>
-            <span className="h-px w-16 bg-gray-300"></span>
-            </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {loading ? "Signing up..." : "Sign Up"}
+          </button>
+        </form>
 
-            {/* Social Signup */}
-            <div className="flex space-x-4">
-            {/* Google */}
-            <button className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition">
-                <img
-                src="https://www.svgrepo.com/show/355037/google.svg"
-                alt="google"
-                className="w-5 h-5"
-                />
-                <span className="text-sm font-medium text-gray-700">Google</span>
-            </button>
-
-            {/* Facebook */}
-            <button className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition">
-                <img
-                src="https://www.svgrepo.com/show/475647/facebook-color.svg"
-                alt="facebook"
-                className="w-5 h-5"
-                />
-                <span className="text-sm font-medium text-gray-700">Facebook</span>
-            </button>
-            </div>
-
-            {/* Login Redirect */}
-            <p className="text-center text-sm text-gray-600">
-            Already have an account?{" "}
-            <a href="/Login" className="text-blue-600 hover:underline">
-                Login
-            </a>
-            </p>
+        <div className="flex items-center justify-center space-x-2 text-gray-500">
+          <span className="h-px w-16 bg-gray-300"></span>
+          <span className="text-sm">or sign up with</span>
+          <span className="h-px w-16 bg-gray-300"></span>
         </div>
-        </div>
-    );
-    };
 
-    export default Sign;
+        <div className="flex space-x-4">
+          <button className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition">
+            <img
+              src="https://www.svgrepo.com/show/355037/google.svg"
+              alt="google"
+              className="w-5 h-5"
+            />
+            <span className="text-sm font-medium text-gray-700">Google</span>
+          </button>
+
+          <button className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition">
+            <img
+              src="https://www.svgrepo.com/show/475647/facebook-color.svg"
+              alt="facebook"
+              className="w-5 h-5"
+            />
+            <span className="text-sm font-medium text-gray-700">Facebook</span>
+          </button>
+        </div>
+
+        <p className="text-center text-sm text-gray-600">
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Login
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Sign;

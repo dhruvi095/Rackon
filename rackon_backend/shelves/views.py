@@ -110,3 +110,26 @@ class ShelfListCreateView(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+# shelves/views.py
+class ShelfInventoryListCreateView(generics.ListCreateAPIView):
+    serializer_class = ShelfInventorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Only show inventory for shelves rented by the brand
+        return ShelfInventory.objects.filter(brand=self.request.user)
+
+    def perform_create(self, serializer):
+        # Ensure brand and shelf are assigned
+        shelf_id = self.request.data.get('shelf')
+        shelf = Shelf.objects.get(id=shelf_id)
+        serializer.save(brand=self.request.user, shelf=shelf)
+
+class ShelfInventoryUpdateView(generics.RetrieveUpdateAPIView):
+    serializer_class = ShelfInventorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ShelfInventory.objects.filter(brand=self.request.user)

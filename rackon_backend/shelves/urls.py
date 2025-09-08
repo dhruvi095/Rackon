@@ -8,7 +8,8 @@ urlpatterns = [
     path('<int:pk>/', ShelfDetailView.as_view(), name='shelf-detail'),
     path('upload-image/', ShelfImageUploadView.as_view(), name='shelf-image-upload'),
     path('images/<int:pk>/delete/', ShelfImageDeleteView.as_view(), name='shelf-image-delete'),
-
+    path('inventory/', ShelfInventoryListCreateView.as_view(), name='shelf-inventory-list-create'),
+    path('inventory/<int:pk>/', ShelfInventoryUpdateView.as_view(), name='shelf-inventory-update'),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'bookings',
     'payments',
     'notifications',
+    'products',
     'channels',
 ]
 
