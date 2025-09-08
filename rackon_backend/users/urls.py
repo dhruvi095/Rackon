@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+
+from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from users.views import RegisterView
+
+urlpatterns = [
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+]
+=======
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from users.views import *
@@ -17,3 +29,4 @@ urlpatterns = [
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2

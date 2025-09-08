@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+from django.db import models
+
+# Create your models here.
+=======
 # payment/models.py
 from django.db import models
 from django.conf import settings
@@ -31,3 +36,4 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.booking} - {self.payment_type} - {self.status}"
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2

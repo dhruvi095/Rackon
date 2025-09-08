@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+from django.shortcuts import render
+
+# Create your views here.
+=======
 from xmlrpc import client
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -116,3 +121,4 @@ def payment_webhook(request):
 
 
     return Response({"detail": "Webhook processed"})
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2

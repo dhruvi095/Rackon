@@ -1,5 +1,7 @@
 from django.urls import path, include
 from django.contrib import admin
+<<<<<<< HEAD
+=======
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -29,6 +31,7 @@ swagger_settings = {
         }
     }
 }
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,6 +39,10 @@ urlpatterns = [
     path('api/shelves/', include('shelves.urls')),
     path('api/bookings/', include('bookings.urls')),
     path('api/notifications/', include('notifications.urls')),
+<<<<<<< HEAD
+    path('api/dashboard/', include('dashboard.urls'))
+]
+=======
     path('api/dashboard/', include('dashboard.urls')),
     path('api/payments/', include('payments.urls')),
     path('api/products/', include('products.urls')),
@@ -47,3 +54,4 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2

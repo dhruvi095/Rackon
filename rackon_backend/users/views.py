@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+from rest_framework import generics
+from .serializers import UserSerializer
+from .models import User
+=======
 from rest_framework import generics, permissions, status
 from .serializers import *
 from .models import *
@@ -9,10 +14,14 @@ from rest_framework import status
 from django.core.mail import send_mail
 
 
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+<<<<<<< HEAD
+    
+=======
     
 # Custom login view
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -135,3 +144,4 @@ def get_email_from_username(request):
         return Response({"email": user.email})
     except User.DoesNotExist:
         return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
