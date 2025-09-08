@@ -121,7 +121,7 @@ function Home() {
             placeholder="Location"
             className="p-2 rounded-lg border"
           />
-          <select className="p-2 rounded-lg border">
+          <select className="p-2 rounded-lg border ">
             <option disabled selected>
               Type of Event
             </option>
