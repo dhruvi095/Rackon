@@ -8,6 +8,9 @@ import Sign from './Components/Sign'
 import Login from './Components/Login'
 import Reset from './Components/Reset'
 import OTP from './Components/OTP'
+import DsOwner from './Components/DsOwner'
+import History from './Components/History'
+import Payment from './Components/Payment'
 
 function Layout({ children }) {
   const location = useLocation();
@@ -34,6 +37,9 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Reset" element={<Reset />} />
           <Route path="/OTP" element={<OTP />} />
+          <Route path="/owner" element={<DsOwner />} />
+          <Route path="/History" element={<History />} />
+          <Route path="/Payment" element={<Payment />} />
         </Routes>
       </Layout>
     </Router>
