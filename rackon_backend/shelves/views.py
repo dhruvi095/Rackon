@@ -36,6 +36,10 @@ class ShelfImageUploadView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         shelf_id = request.data.get('shelf')
+        
+        if not shelf_id:
+            return Response({"detail": "Shelf ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
         shelf = get_object_or_404(Shelf, id=shelf_id)
 
         # ✅ Ensure only the owner can upload images
@@ -59,6 +63,7 @@ class ShelfImageUploadView(generics.CreateAPIView):
             serializer.is_valid(raise_exception=True)
             serializer.save(shelf=shelf)
             created_images.append(serializer.data)
+        print(f"[DEBUG] request.user: {request.user}, shelf.owner: {shelf.owner}")
 
         return Response(created_images, status=status.HTTP_201_CREATED)
 
@@ -99,5 +104,9 @@ class ShelfListCreateView(generics.ListCreateAPIView):
             qs = qs.filter(currently_available=True)
         return qs.order_by('-currently_available', '-created_at')
 
+    def get_serializer_context(self):
+        # Ensure request is available in serializer
+        return {"request": self.request}
+    
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

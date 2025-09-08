@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-import bgImage from "../assets/pic2.jpg"; // background image
+import bgImage from "../assets/pic2.jpg";
 import axios from "axios";
 
 function Home() {
   const [role, setRole] = useState(null); // "owner" | "brand"
   const [spaces, setSpaces] = useState([]); // Shelves from backend
   const [loading, setLoading] = useState(true);
+
+  // Search inputs
+  const [locationInput, setLocationInput] = useState("");
+  const [eventTypeInput, setEventTypeInput] = useState("");
+  const [sizeInput, setSizeInput] = useState("");
 
   // Benefits (static)
   const benefits = [
@@ -52,6 +57,7 @@ function Home() {
   ];
 
   // Fetch shelves from backend
+<<<<<<< HEAD
   useEffect(() => {
     const fetchShelves = async () => {
       try {
@@ -66,6 +72,33 @@ function Home() {
 
     fetchShelves();
   }, []);
+=======
+  const fetchShelves = async (params = {}) => {
+    setLoading(true);
+    try {
+      const response = await axios.get("http://localhost:8000/api/shelves/", { params });
+      setSpaces(response.data.filter(shelf => shelf.currently_available));
+    } catch (error) {
+      console.error("Error fetching shelves:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchShelves();
+  }, []);
+
+  // Handle search button click
+  const handleSearch = () => {
+    const params = {};
+    if (locationInput) params.location = locationInput;
+    if (eventTypeInput) params.event_type = eventTypeInput;
+    if (sizeInput) params.size = sizeInput;
+
+    fetchShelves(params);
+  };
+>>>>>>> be967388a142cb2b096c2a44d66379cf355b80c3
 
   return (
     <>
@@ -102,6 +135,7 @@ function Home() {
               </button>
             </div>
           ) : (
+<<<<<<< HEAD
             <div className="flex flex-col sm:flex-row justify-center gap-3 w-full max-w-3xl mx-auto">
               <input
                 type="text"
@@ -129,6 +163,40 @@ function Home() {
                 <option className="bg-white text-black">Large</option>
               </select>
               <button className="bg-green-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
+=======
+            <div className="flex justify-center gap-4">
+              <input
+                type="text"
+                placeholder="Location"
+                className="p-2 rounded-lg border"
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+              />
+              <select
+                className="p-2 rounded-lg border"
+                value={eventTypeInput}
+                onChange={(e) => setEventTypeInput(e.target.value)}
+              >
+                <option value="">Type of Event</option>
+                <option value="Retail / Pop-up store">Retail / Pop-up store</option>
+                <option value="Art Exhibit / Gallery">Art Exhibit / Gallery</option>
+                <option value="Corporate Event">Corporate Event</option>
+              </select>
+              <select
+                className="p-2 rounded-lg border"
+                value={sizeInput}
+                onChange={(e) => setSizeInput(e.target.value)}
+              >
+                <option value="">Size</option>
+                <option value="Small">Small</option>
+                <option value="Medium">Medium</option>
+                <option value="Large">Large</option>
+              </select>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                onClick={handleSearch}
+              >
+>>>>>>> be967388a142cb2b096c2a44d66379cf355b80c3
                 Search
               </button>
             </div>
@@ -177,6 +245,7 @@ function Home() {
             </button>
           </div>
 
+<<<<<<< HEAD
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {loading ? (
               <p>Loading shelves...</p>
@@ -187,9 +256,23 @@ function Home() {
                 <div
                   key={space.id}
                   className="bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden"
+=======
+          {loading ? (
+            <p>Loading shelves...</p>
+          ) : spaces.length === 0 ? (
+            <p>No available shelves at the moment.</p>
+          ) : (
+            <div
+              className={`flex gap-6 overflow-x-auto py-2 scrollbar-hide snap-x`}
+            >
+              {spaces.map((space) => (
+                <div
+                  key={space.id}
+                  className="min-w-[300px] flex-shrink-0 bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden snap-start"
+>>>>>>> be967388a142cb2b096c2a44d66379cf355b80c3
                 >
                   <img
-                    src={space.images?.[0]?.image || "/placeholder.jpg"}
+                    src={space.images?.[0]?.image || space.image || "/placeholder.jpg"}
                     alt={space.event_type || "Shelf"}
                     className="w-full h-48 object-cover"
                   />
@@ -205,13 +288,17 @@ function Home() {
                     </p>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
+<<<<<<< HEAD
       {/* Testimonials Section */}
+=======
+
+>>>>>>> be967388a142cb2b096c2a44d66379cf355b80c3
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
