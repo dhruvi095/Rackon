@@ -5,6 +5,7 @@ import Home from './Components/Home'
 import Header from './Components/Header'
 import Footer from './Components/Footer';
 import DsOwner from './Components/DsOwner';
+import DsBrand from './Components/DsBrand';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/owner" element={<DsOwner/>} />
+        <Route path="/brand" element={<DsBrand/>} />
       </Routes>
       <Footer/>
     </Router>
