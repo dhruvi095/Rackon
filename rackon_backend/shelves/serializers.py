@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import Shelf, ShelfImage
+from .models import Shelf, ShelfImage, ShelfInventory
+from products.models import Product
+from products.serializers import ProductSerializer
+
 
 class ShelfImageSerializer(serializers.ModelSerializer):
     # ✅ Return full URL instead of just relative path
@@ -42,3 +45,15 @@ class ShelfSerializer(serializers.ModelSerializer):
         for img in uploaded_images:
             ShelfImage.objects.create(shelf=instance, image=img)
         return instance
+
+
+# shelves/serializers.py
+
+class ShelfInventorySerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all(), source='product', write_only=True)
+
+    class Meta:
+        model = ShelfInventory
+        fields = ['id', 'shelf', 'brand', 'product', 'product_id', 'quantity', 'created_at', 'updated_at']
+        read_only_fields = ['brand', 'shelf']

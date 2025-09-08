@@ -31,6 +31,7 @@ function Home() {
     setLoading(true);
     try {
       const response = await axios.get("http://localhost:8000/api/shelves/", { params });
+      // Only currently available shelves
       setSpaces(response.data.filter(shelf => shelf.currently_available));
     } catch (error) {
       console.error("Error fetching shelves:", error);
@@ -43,7 +44,6 @@ function Home() {
     fetchShelves();
   }, []);
 
-  // Handle search button click
   const handleSearch = () => {
     const params = {};
     if (locationInput) params.location = locationInput;
@@ -55,6 +55,7 @@ function Home() {
 
   return (
     <>
+      {/* Hero Section */}
       <div
         className="h-[70vh] w-full bg-cover bg-center flex items-center justify-center relative"
         style={{ backgroundImage: `url(${bgImage})` }}
@@ -70,8 +71,12 @@ function Home() {
 
           {!role ? (
             <div className="flex gap-4 justify-center">
-              <button onClick={() => setRole("owner")} className="px-6 py-2 rounded-lg font-medium transition border bg-white text-gray-700 hover:bg-green-100">I’m a Shelf Owner</button>
-              <button onClick={() => setRole("brand")} className="px-6 py-2 rounded-lg font-medium transition border bg-white text-gray-700 hover:bg-green-100">I’m a Brand</button>
+              <button onClick={() => setRole("owner")} className="px-6 py-2 rounded-lg font-medium transition border bg-white text-gray-700 hover:bg-green-100">
+                I’m a Shelf Owner
+              </button>
+              <button onClick={() => setRole("brand")} className="px-6 py-2 rounded-lg font-medium transition border bg-white text-gray-700 hover:bg-green-100">
+                I’m a Brand
+              </button>
             </div>
           ) : (
             <div className="flex justify-center gap-4">
@@ -113,6 +118,7 @@ function Home() {
         </div>
       </div>
 
+      {/* Benefits Section */}
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center mb-10">
@@ -132,6 +138,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Explore Spaces */}
       <section className="w-full bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <div className="flex justify-between items-center mb-10">
@@ -145,12 +152,12 @@ function Home() {
             <p>No available shelves at the moment.</p>
           ) : (
             <div
-              className={`flex gap-6 overflow-x-auto py-2 scrollbar-hide snap-x`}
+              className={`${spaces.length > 3 ? "flex gap-6 overflow-x-auto py-2 scrollbar-hide snap-x scroll-smooth" : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"}`}
             >
               {spaces.map((space) => (
                 <div
                   key={space.id}
-                  className="min-w-[300px] flex-shrink-0 bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden snap-start"
+                  className={`${spaces.length > 3 ? "min-w-[300px] flex-shrink-0 snap-start" : ""} bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden`}
                 >
                   <img
                     src={space.images?.[0]?.image || space.image || "/placeholder.jpg"}
@@ -171,7 +178,7 @@ function Home() {
         </div>
       </section>
 
-
+      {/* Testimonials */}
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
