@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from './Components/Home'
 import Header from './Components/Header'
 import Footer from './Components/Footer';
+import DsOwner from './Components/DsOwner';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -14,6 +15,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/owner" element={<DsOwner/>} />
       </Routes>
       <Footer/>
     </Router>
