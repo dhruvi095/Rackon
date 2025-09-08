@@ -36,8 +36,62 @@ function Home() {
       }
     };
 
+<<<<<<< HEAD
     fetchShelves();
   }, []);
+=======
+                    Find and Rent Retail Shelf Space Near You
+                </h1>
+                <p className="mb-6 text-lg md:text-xl">
+                   Rackon connects shop owners with brands to rent shelves and grow together.
+                </p>
+                  {!role && (
+        <div className="flex gap-4 justify-center">
+          <button
+            onClick={() => setRole("owner")}
+            className="px-6 py-2 rounded-lg font-medium transition border bg-white text-gray-700 hover:bg-green-100"
+          >
+            I’m a Shelf Owner
+          </button>
+          <button
+            onClick={() => setRole("brand")}
+            className="px-6 py-2 rounded-lg font-medium transition border bg-white text-gray-700 hover:bg-green-100"
+          >
+            I’m a Brand
+          </button>
+        </div>
+      )}
+         {role && (
+        <div className="flex justify-center gap-4">
+          <input
+            type="text"
+            placeholder="Location"
+            className="p-2 rounded-lg border"
+          />
+          <select className="p-2 rounded-lg border ">
+            <option disabled selected>
+              Type of Event
+            </option>
+            <option>Retail / Pop-up store</option>
+            <option>Art Exhibit / Gallery</option>
+            <option>Corporate Event</option>
+          </select>
+          <select className="p-2 rounded-lg border">
+            <option disabled selected>
+              Size
+            </option>
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+          </select>
+          <button className="bg-green-500 text-white px-4 py-2 rounded-lg">
+            Search
+          </button>
+        </div>
+      )}
+            </div>
+        </div>
+>>>>>>> 2773539db8902bfaca7a4c834a3c014c6585d368
 
   return (
     <>
