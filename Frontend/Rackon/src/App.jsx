@@ -9,6 +9,9 @@ import Sign from './Components/Sign'
 import Login from './Components/Login'
 import Reset from './Components/Reset'
 import OTP from './Components/OTP'
+import DsOwner from './Components/DsOwner'
+import History from './Components/History'
+import Payment from './Components/Payment'
 
 
 function Layout({ children }) {
@@ -41,7 +44,13 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Reset" element={<Reset />} />
           <Route path="/OTP" element={<OTP />} />
+<<<<<<< HEAD
           
+=======
+          <Route path="/owner" element={<DsOwner />} />
+          <Route path="/History" element={<History />} />
+          <Route path="/Payment" element={<Payment />} />
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
         </Routes>
       </Layout>
 =======

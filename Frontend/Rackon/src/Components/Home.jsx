@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import bgImage from "../assets/pic2.jpg";
+import bgImage from "../assets/pic2.png";
 import axios from "axios";
 
 function Home() {
@@ -57,8 +57,13 @@ function Home() {
     <>
       {/* Hero Section */}
       <div
-        className="h-[70vh] w-full bg-cover bg-center flex items-center justify-center relative"
-        style={{ backgroundImage: `url(${bgImage})` }}
+        className="h-screen w-full flex items-center justify-center relative"
+        style={{
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover", // ensures full screen coverage
+          backgroundPosition: "center", // keeps center focus
+          backgroundRepeat: "no-repeat", // prevents tiling
+        }}
       >
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative z-10 text-center text-white px-4">
