@@ -1,5 +1,12 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+<<<<<<< HEAD
+=======
+class IsOwner(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.owner == request.user
+
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 class IsShelfOwnerOrReadOnly(BasePermission):
     """
     Only shelf owners can update/delete.

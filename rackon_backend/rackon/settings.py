@@ -13,6 +13,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+<<<<<<< HEAD
+=======
+# settings.py
+RAZORPAY_KEY_ID = 'your_razorpay_key_id'
+RAZORPAY_KEY_SECRET = 'your_razorpay_key_secret'
+RAZORPAY_WEBHOOK_SECRET = "your_webhook_secret_here"
+
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,13 +49,36 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'django_filters',
+<<<<<<< HEAD
+=======
+    'drf_yasg',
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
     'users',
     'shelves',
     'bookings',
     'payments',
     'notifications',
+<<<<<<< HEAD
 ]
 
+=======
+    'products',
+    'channels',
+]
+
+ASGI_APPLICATION = "rackon_backend.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -145,6 +176,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 # REST Framework JWT config
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -162,3 +197,25 @@ AUTH_USER_MODEL = 'users.User'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+<<<<<<< HEAD
+=======
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': "JWT Authorization header. Example: 'Bearer <token>'",
+        }
+    },
+    'SECURITY_REQUIREMENTS': [{'Bearer': []}],
+    'USE_SESSION_AUTH': False,   # We are using JWTn
+    'JSON_EDITOR': True,
+    
+    'DEFAULT_API_KEYS': {
+        'Bearer': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'  # replace with real test token
+    },
+}
+>>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
