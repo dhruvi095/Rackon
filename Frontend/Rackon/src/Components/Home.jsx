@@ -27,6 +27,7 @@ function Home() {
       try {
         const response = await axios.get("http://localhost:8000/api/shelves/"); // adjust URL if needed
         // Only include available shelves (currently_available = True)
+        console.log(response.data); 
         setSpaces(response.data.filter(shelf => shelf.currently_available));
         setLoading(false);
       } catch (error) {
@@ -114,7 +115,7 @@ function Home() {
               spaces.map((space) => (
                 <div key={space.id} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden">
                   <img
-                    src={space.images?.[0]?.image || "/placeholder.jpg"}
+                    src={space.images?.[0]?.image || space.image || "/placeholder.jpg"}
                     alt={space.event_type || "Shelf"}
                     className="w-full h-48 object-cover"
                   />
