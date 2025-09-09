@@ -447,7 +447,7 @@
 
 // export default DsBrand;
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ for navigation
+import { useNavigate } from "react-router-dom";
 import user from "../assets/user.png";
 
 function DsBrand() {
@@ -514,18 +514,18 @@ function DsBrand() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [addingCategory, setAddingCategory] = useState(false);
 
-  const navigate = useNavigate(); // ✅ init navigation
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/Login"); // redirect to login page
+    navigate("/Login");
   };
 
   const handleHistory = () => {
-    navigate("/Brandhistory"); // ✅ go to Brandhistory page
+    navigate("/Brandhistory");
   };
 
   const handlePayment = () => {
-    navigate("/Brandpayment"); // ✅ go to Brandpayment page
+    navigate("/Brandpayment");
   };
 
   const handleSaveCategory = (cat) => {
@@ -554,15 +554,15 @@ function DsBrand() {
         cat.id === selectedCategory
           ? editingProduct
             ? {
-                ...cat,
-                products: cat.products.map((p) =>
-                  p.id === prod.id ? prod : p
-                ),
-              }
+              ...cat,
+              products: cat.products.map((p) =>
+                p.id === prod.id ? prod : p
+              ),
+            }
             : {
-                ...cat,
-                products: [...cat.products, { ...prod, id: Date.now() }],
-              }
+              ...cat,
+              products: [...cat.products, { ...prod, id: Date.now() }],
+            }
           : cat
       )
     );
@@ -582,7 +582,7 @@ function DsBrand() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
-      {/* Sidebar */}
+
       <aside className="w-full md:w-64 bg-white shadow-lg p-6 flex-shrink-0">
         <div className="flex flex-col items-center text-center mt-[65px]">
           <img
@@ -593,7 +593,6 @@ function DsBrand() {
           <h2 className="mt-3 text-lg font-semibold">BrandUser</h2>
           <p className="text-sm text-gray-500">brand@example.com</p>
 
-          {/* Action Buttons */}
           <div className="mt-6 w-full space-y-3">
             <button
               onClick={handleHistory}
@@ -617,23 +616,20 @@ function DsBrand() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-6">
           Manage Categories & Products
         </h1>
 
-        {/* Category Buttons */}
         <div className="flex flex-wrap gap-3 mb-6">
           {categories.map((cat) => (
             <div key={cat.id} className="flex items-center gap-2">
               <button
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded ${
-                  selectedCategory === cat.id
+                className={`px-4 py-2 rounded ${selectedCategory === cat.id
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200"
-                }`}
+                  }`}
               >
                 {cat.name}
               </button>
@@ -659,7 +655,6 @@ function DsBrand() {
           </button>
         </div>
 
-        {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories
             .find((cat) => cat.id === selectedCategory)
@@ -704,7 +699,6 @@ function DsBrand() {
               </div>
             ))}
 
-          {/* Add New Product Card */}
           <div
             onClick={() => {
               setAddingProduct(true);
@@ -717,7 +711,6 @@ function DsBrand() {
           </div>
         </div>
 
-        {/* Category Form */}
         {(editingCategory || addingCategory) && (
           <CategoryForm
             category={editingCategory}
@@ -729,7 +722,6 @@ function DsBrand() {
           />
         )}
 
-        {/* Product Form */}
         {(addingProduct || editingProduct) && (
           <ProductForm
             key={addingProduct ? "new-product" : editingProduct?.id}
@@ -746,10 +738,16 @@ function DsBrand() {
   );
 }
 
+<<<<<<< HEAD
 // ✅ FIXED CategoryForm
 function CategoryForm({ category, onSave, onCancel }) {
   const initial = category ?? {};
   const [cat, setCat] = useState(initial?.id ? { ...initial } : { name: "" });
+=======
+
+function CategoryForm({ category = {}, onSave, onCancel }) {
+  const [cat, setCat] = useState(category.id ? category : { name: "" });
+>>>>>>> 9e84105f3300a8532a19ac40079648becba2bc60
 
   return (
     <div className="mt-6 bg-white p-4 rounded-lg shadow space-y-3">
@@ -792,13 +790,13 @@ function ProductForm({ product = {}, onSave, onCancel }) {
     product.id
       ? product
       : {
-          name: "",
-          location: "",
-          size: "",
-          rent: "",
-          img: "",
-          visibility: "public",
-        }
+        name: "",
+        location: "",
+        size: "",
+        rent: "",
+        img: "",
+        visibility: "public",
+      }
   );
 
   return (

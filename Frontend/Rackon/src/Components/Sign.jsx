@@ -7,7 +7,7 @@ const Sign = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("brand"); 
+    const [role, setRole] = useState("brand");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ const Sign = () => {
                 username,
                 email,
                 password,
-                role, 
+                role,
             });
 
             alert("Registration successful! Please login.");

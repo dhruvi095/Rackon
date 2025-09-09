@@ -3,7 +3,7 @@ import React from "react";
 const TC = () => {
   return (
     <div className="min-h-screen bg-white text-black pt-20">
-      {/* Hero Section */}
+
       <div className="text-center py-12 px-4 bg-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
           Terms & Conditions
@@ -13,7 +13,6 @@ const TC = () => {
         </p>
       </div>
 
-      {/* Terms Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="bg-gray-100 text-black shadow-lg rounded-2xl p-6 sm:p-10">
           <h2 className="text-2xl sm:text-3xl font-semibold mb-6">
@@ -24,7 +23,6 @@ const TC = () => {
             following Terms & Conditions. Please review them carefully.
           </p>
 
-          {/* Sections */}
           <div className="space-y-8">
             <div>
               <h3 className="text-lg sm:text-xl font-semibold mb-3">

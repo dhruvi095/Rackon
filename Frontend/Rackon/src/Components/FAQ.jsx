@@ -41,13 +41,9 @@ const FAQ = () => {
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-
-  // Filter FAQs based on search query
   const filteredFaqs = faqs.filter((faq) =>
     faq.question.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // Suggestions list
   const suggestions = faqs
     .filter(
       (faq) =>
@@ -63,7 +59,7 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen bg-white text-black pt-20">
-      {/* Hero Section */}
+
       <div className="text-center py-10 px-4 sm:py-14 md:py-16 bg-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-snug">
           Frequently Asked Questions
@@ -73,7 +69,6 @@ const FAQ = () => {
         </p>
       </div>
 
-      {/* Search Section */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <input
           type="text"
@@ -87,7 +82,6 @@ const FAQ = () => {
           className="w-full border border-gray-300 rounded-xl py-3 px-4 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base sm:text-lg"
         />
 
-        {/* Suggestions Dropdown */}
         {showSuggestions && suggestions.length > 0 && (
           <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-2 shadow-lg z-10">
             {suggestions.map((faq, index) => (
@@ -103,7 +97,6 @@ const FAQ = () => {
         )}
       </div>
 
-      {/* FAQ Section */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div className="bg-gray-100 shadow-lg rounded-2xl p-5 sm:p-8 md:p-10">
           {filteredFaqs.length > 0 ? (
