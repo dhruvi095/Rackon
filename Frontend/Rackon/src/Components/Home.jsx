@@ -24,6 +24,10 @@ function Home() {
     { id: 2, name: "Priya Desai", role: "Brand Owner – Delhi", quote: "With Rackon, my products gained visibility in local stores. Sales improved by 40% and I can track everything in real time.", image: "https://randomuser.me/api/portraits/women/44.jpg" },
   ];
 
+<<<<<<< HEAD
+=======
+  // Fetch shelves from backend
+>>>>>>> de2d7d1322832a7bc08e7d9e484167e58c53aa9c
   const fetchShelves = async (params = {}) => {
     setLoading(true);
     try {
@@ -164,6 +168,7 @@ function Home() {
                 }`}
             >
               {spaces.map(space => (
+<<<<<<< HEAD
                 <div
                   key={space.id}
                   className={`${spaces.length > 3 ? "min-w-[300px] flex-shrink-0 snap-start" : ""
@@ -174,6 +179,10 @@ function Home() {
                     alt={space.event_type || "Shelf"}
                     className="w-full h-48 object-cover"
                   />
+=======
+                <div key={space.id} className={`${spaces.length > 3 ? "min-w-[300px] flex-shrink-0 snap-start" : ""} bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden`}>
+                  <img src={space.images?.[0]?.image || space.image || "/placeholder.jpg"} alt={space.event_type || "Shelf"} className="w-full h-48 object-cover" />
+>>>>>>> de2d7d1322832a7bc08e7d9e484167e58c53aa9c
                   <div className="p-5">
                     <h3 className="text-lg font-semibold text-gray-800">{space.location}</h3>
                     <p className="text-sm text-gray-600 mt-1">
@@ -184,9 +193,16 @@ function Home() {
                     </p>
                   </div>
                 </div>
+<<<<<<< HEAD
               ))}
             </div>
           )}
+=======
+              ))} {/* <-- closing parenthesis for map */}
+            </div>
+          )}
+
+>>>>>>> de2d7d1322832a7bc08e7d9e484167e58c53aa9c
         </div>
       </section>
       <section className="w-full bg-white">
