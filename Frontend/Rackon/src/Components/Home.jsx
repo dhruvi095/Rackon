@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import bgImage from "../assets/pic2.png";
+import img1 from "../assets/img1.jpg";
+// import img2 from "../assets/img2.png";
+// import img3 from "../assets/img3.png";
 import axios from "axios";
 
 function Home() {
@@ -27,7 +30,7 @@ function Home() {
   ];
 
   // Fetch shelves from backend
-<<<<<<< HEAD
+
   const fetchShelves = async (params = {}) => {
     setLoading(true);
     try {
@@ -41,9 +44,9 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-    fetchShelves();
-  }, []);
+  // useEffect(() => {
+  //   fetchShelves();
+  // }, []);
 
   const handleSearch = () => {
     const params = {};
@@ -53,7 +56,7 @@ function Home() {
 
     fetchShelves(params);
   };
-=======
+
   useEffect(() => {
     const fetchShelves = async () => {
       try {
@@ -68,7 +71,7 @@ function Home() {
 
     fetchShelves();
   }, []);
->>>>>>> c4a7064ac29aa984ef60cb9397b0b14fabe5a6a8
+
 
   return (
     <>
@@ -105,7 +108,7 @@ function Home() {
               <input
                 type="text"
                 placeholder="Location"
-<<<<<<< HEAD
+
                 className="p-2 rounded-lg border w-full sm:w-auto"
                 value={locationInput}
                 onChange={e => setLocationInput(e.target.value)}
@@ -133,8 +136,6 @@ function Home() {
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto"
                 onClick={handleSearch}
-              >
-=======
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
                 className="p-2 rounded-lg border border-white bg-transparent text-white placeholder-white w-full sm:w-auto"
@@ -168,7 +169,7 @@ function Home() {
                 <option className="bg-white text-black">Large</option>
               </select>
               <button className="bg-green-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
->>>>>>> c4a7064ac29aa984ef60cb9397b0b14fabe5a6a8
+
                 Search
               </button>
             </div>
@@ -205,17 +206,7 @@ function Home() {
             </button>
           </div>
 
-<<<<<<< HEAD
-          {loading ? (
-            <p>Loading shelves...</p>
-          ) : spaces.length === 0 ? (
-            <p>No available shelves at the moment.</p>
-          ) : (
-            <div className={`${spaces.length > 3 ? "flex gap-6 overflow-x-auto py-2 scrollbar-hide snap-x scroll-smooth" : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"}`}>
-              {spaces.map(space => (
-                <div key={space.id} className={`${spaces.length > 3 ? "min-w-[300px] flex-shrink-0 snap-start" : ""} bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden`}>
-                  <img src={space.images?.[0]?.image || space.image || "/placeholder.jpg"} alt={space.event_type || "Shelf"} className="w-full h-48 object-cover" />
-=======
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {loading ? (
               <p>Loading shelves...</p>
@@ -231,12 +222,12 @@ function Home() {
                     src={
                       space.images?.[0]?.image ||
                       space.image ||
-                      "/placeholder.jpg"
+                      img1
                     }
                     alt={space.event_type || "Shelf"}
                     className="w-full h-48 object-cover"
                   />
->>>>>>> c4a7064ac29aa984ef60cb9397b0b14fabe5a6a8
+
                   <div className="p-5">
                     <h3 className="text-lg font-semibold text-gray-800">{space.location}</h3>
                     <p className="text-sm text-gray-600 mt-1">{space.size} • {space.event_type || "General"}</p>
