@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false); // mobile menu
-  const [helpOpen, setHelpOpen] = useState(false); // help dropdown
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // login/register check
+  const [isOpen, setIsOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const toggleHelp = () => {
     if (isAuthenticated) {
@@ -11,31 +12,31 @@ const Header = () => {
     }
   };
 
-  // Dummy logout (real ma backend thi handle karjo)
   const handleLogout = () => {
     setIsAuthenticated(false);
   };
+  const Navigate = useNavigate();
+  const handle = () => {
+    Navigate('/')
+  }
 
   return (
     <header className="w-full bg-white shadow-sm fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+
           <div className="flex items-center">
-            <span className="text-2xl font-bold">Rackon</span>
+            <span className="text-2xl font-bold cursor-pointer" onClick={handle}>Rackon</span>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6 text-black font-medium">
             <a href="#" className="hover:text-green-600">Magazine</a>
 
-            {/* Help Dropdown (always visible, only opens if logged in) */}
             <div className="relative group">
               <button
                 onClick={toggleHelp}
-                className={`flex items-center ${
-                  isAuthenticated ? "hover:text-green-600" : "text-gray-400 cursor-not-allowed"
-                }`}
+                className={`flex items-center ${isAuthenticated ? "hover:text-green-600" : "text-gray-400 cursor-not-allowed"
+                  }`}
               >
                 Help
                 <svg
@@ -53,8 +54,6 @@ const Header = () => {
                   ></path>
                 </svg>
               </button>
-
-              {/* Dropdown Menu (only if logged in) */}
               {isAuthenticated && helpOpen && (
                 <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
                   <a href="/Contact" className="block px-4 py-2 text-black hover:bg-gray-100">Contact Us</a>
@@ -65,7 +64,6 @@ const Header = () => {
               )}
             </div>
 
-            {/* Show Sign up / Log in only if NOT authenticated */}
             {!isAuthenticated ? (
               <>
                 <a href="/Sign" className="hover:text-green-600">Sign up</a>
@@ -81,7 +79,6 @@ const Header = () => {
             )}
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
@@ -103,18 +100,15 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-sm">
           <nav className="flex flex-col space-y-2 px-4 py-3 text-black font-medium">
             <a href="#" className="hover:text-green-600">Magazine</a>
 
-            {/* Help (always visible, only expands if logged in) */}
             <details className="group" open={false}>
               <summary
-                className={`flex items-center cursor-pointer ${
-                  isAuthenticated ? "hover:text-green-600" : "text-gray-400 cursor-not-allowed"
-                }`}
+                className={`flex items-center cursor-pointer ${isAuthenticated ? "hover:text-green-600" : "text-gray-400 cursor-not-allowed"
+                  }`}
                 onClick={(e) => {
                   if (!isAuthenticated) e.preventDefault();
                 }}
@@ -139,8 +133,6 @@ const Header = () => {
                 </div>
               )}
             </details>
-
-            {/* Show Sign up / Log in only if NOT authenticated */}
             {!isAuthenticated ? (
               <>
                 <a href="/Sign" className="hover:text-green-600">Sign up</a>

@@ -3,7 +3,6 @@ import React from "react";
 const PP = () => {
   return (
     <div className="min-h-screen bg-white text-black pt-20">
-      {/* Hero Section */}
       <div className="text-center py-10 px-4 sm:py-14 md:py-16 bg-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-snug">
           Privacy Policy
@@ -13,8 +12,6 @@ const PP = () => {
           and protects your information.
         </p>
       </div>
-
-      {/* Privacy Content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div className="bg-gray-100 text-black shadow-lg rounded-2xl p-5 sm:p-8 md:p-10 lg:p-12">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6">
@@ -24,8 +21,6 @@ const PP = () => {
             Rackon values your trust. This Privacy Policy outlines how we handle
             your data when you use our services.
           </p>
-
-          {/* Sections */}
           <div className="space-y-8">
             <div>
               <h3 className="text-lg sm:text-xl font-semibold mb-3">
@@ -91,8 +86,6 @@ const PP = () => {
               </p>
             </div>
           </div>
-
-          {/* Footer note */}
           <p className="text-gray-700 mt-10 text-sm sm:text-base md:text-lg leading-relaxed">
             If you have any questions regarding this Privacy Policy, please
             contact us at{" "}

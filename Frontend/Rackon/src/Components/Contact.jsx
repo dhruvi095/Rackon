@@ -20,7 +20,6 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen text-black pt-20">
-      {/* Hero Section */}
       <div className="text-center py-10 px-4 ">
         <h1 className="text-3xl md:text-5xl font-bold">Contact Us</h1>
         <p className="mt-3 text-lg text-black">
@@ -28,9 +27,8 @@ const Contact = () => {
         </p>
       </div>
 
-      {/* Contact Content */}
       <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Contact Form */}
+
         <div className="bg-gray-200 text-black shadow-lg rounded-2xl p-6">
           <h2 className="text-2xl font-semibold mb-6 text-blue-600">
             Send us a message
@@ -72,7 +70,6 @@ const Contact = () => {
           </form>
         </div>
 
-        {/* Contact Info */}
         <div className="bg-gray-200 text-black shadow-lg rounded-2xl p-6">
           <h2 className="text-2xl font-semibold mb-6 text-blue-600">
             Get in touch
@@ -106,7 +103,6 @@ const Contact = () => {
             </p>
           </div>
 
-          {/* Map */}
           <div className="mt-6">
             <iframe
               title="Rackon Location"

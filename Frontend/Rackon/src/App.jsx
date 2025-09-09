@@ -8,7 +8,6 @@ import Sign from './Components/Sign'
 import Login from './Components/Login'
 import Reset from './Components/Reset'
 import OTP from './Components/OTP'
-<<<<<<< HEAD
 import DsOwner from './Components/DsOwner'
 import History from './Components/History'
 import Payment from './Components/Payment'
@@ -19,9 +18,6 @@ import PP from './Components/PP'
 import FAQ from './Components/FAQ'
 import Brandhistory from './Components/Brandhistory'
 import Brandpayment from './Components/Brandpayment'
-=======
-
->>>>>>> de2d7d1322832a7bc08e7d9e484167e58c53aa9c
 
 function Layout({ children }) {
   const location = useLocation();
@@ -42,14 +38,12 @@ function App() {
   return (
     <Router>
       <Layout>
-        {/* <Header /> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Sign" element={<Sign />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Reset" element={<Reset />} />
           <Route path="/OTP" element={<OTP />} />
-<<<<<<< HEAD
           <Route path="/owner" element={<DsOwner />} />
           <Route path="/History" element={<History />} />
           <Route path="/Payment" element={<Payment />} />
@@ -61,18 +55,9 @@ function App() {
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/Brandhistory" element={<Brandhistory />} />
           <Route path="/Brandpayment" element={<Brandpayment />} />
-      
-         
-=======
-          
->>>>>>> de2d7d1322832a7bc08e7d9e484167e58c53aa9c
         </Routes>
-        {/* <Footer /> */}
       </Layout>
     </Router>
-
-
   )
 }
-
 export default App

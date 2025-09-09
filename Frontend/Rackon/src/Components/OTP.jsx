@@ -5,7 +5,7 @@ import axios from "axios";
 const OTP = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const email = location.state?.email || ""; 
+    const email = location.state?.email || "";
     const [otp, setOtp] = useState(["", "", "", ""]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
