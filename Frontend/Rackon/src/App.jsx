@@ -12,6 +12,12 @@ import DsOwner from './Components/DsOwner'
 import History from './Components/History'
 import Payment from './Components/Payment'
 import DsBrand from './Components/DsBrand';
+import Contact from './Components/Contact'
+import TC from './Components/TC'
+import PP from './Components/PP'
+import FAQ from './Components/FAQ'
+import Brandhistory from './Components/Brandhistory'
+import Brandpayment from './Components/Brandpayment'
 function Layout({ children }) {
   const location = useLocation();
   const hideHeaderFooter = location.pathname === "/Sign" || location.pathname === "/Login" || location.pathname === "/Reset" || location.pathname === "/OTP";
@@ -42,6 +48,12 @@ function App() {
           <Route path="/Payment" element={<Payment />} />
           <Route path="/owner" element={<DsOwner />} />
           <Route path="/brand" element={<DsBrand />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/TC" element={<TC />} />
+          <Route path="/PP" element={<PP />} />
+          <Route path="/FAQ" element={<FAQ />} />
+          <Route path="/Brandhistory" element={<Brandhistory />} />
+          <Route path="/Brandpayment" element={<Brandpayment />} />
         </Routes>
       </Layout>
     </Router>

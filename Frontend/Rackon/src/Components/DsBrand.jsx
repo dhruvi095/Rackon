@@ -1,6 +1,7 @@
 // import { useState } from "react";
+// import { useNavigate } from "react-router-dom"; // ✅ for navigation
+// import user from "../assets/user.png";
 
-// // Main Component
 // function DsBrand() {
 //   const [categories, setCategories] = useState([
 //     {
@@ -65,7 +66,20 @@
 //   const [editingCategory, setEditingCategory] = useState(null);
 //   const [addingCategory, setAddingCategory] = useState(false);
 
-//   // Category functions
+//   const navigate = useNavigate(); // ✅ init navigation
+
+//   const handleLogout = () => {
+//     navigate("/Login"); // redirect to login page
+//   };
+
+//   const handleHistory = () => {
+//     navigate("/Brandhistory"); // ✅ go to Brandhistory page
+//   };
+
+//   const handlePayment = () => {
+//     navigate("/Brandpayment"); // ✅ go to Brandpayment page
+//   };
+
 //   const handleSaveCategory = (cat) => {
 //     if (editingCategory) {
 //       setCategories(
@@ -85,7 +99,6 @@
 //     }
 //   };
 
-//   // Product functions
 //   const handleSaveProduct = (prod) => {
 //     setCategories(
 //       categories.map((cat) =>
@@ -97,7 +110,10 @@
 //                   p.id === prod.id ? prod : p
 //                 ),
 //               }
-//             : { ...cat, products: [...cat.products, { ...prod, id: Date.now() }] }
+//             : {
+//                 ...cat,
+//                 products: [...cat.products, { ...prod, id: Date.now() }],
+//               }
 //           : cat
 //       )
 //     );
@@ -116,26 +132,50 @@
 //   };
 
 //   return (
-//     <div className="flex min-h-screen bg-gray-100 mt-15">
+//     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
 //       {/* Sidebar */}
-//       <aside className="w-64 bg-white shadow-lg p-6">
-//         <div className="flex flex-col items-center">
+//       <aside className="w-full md:w-64 bg-white shadow-lg p-6 flex-shrink-0">
+//         <div className="flex flex-col items-center text-center mt-[65px]">
 //           <img
-//             src="https://via.placeholder.com/80"
+//             src={user}
 //             alt="Profile"
 //             className="w-20 h-20 rounded-full border"
 //           />
 //           <h2 className="mt-3 text-lg font-semibold">BrandUser</h2>
 //           <p className="text-sm text-gray-500">brand@example.com</p>
+
+//           {/* Action Buttons */}
+//           <div className="mt-6 w-full space-y-3">
+//             <button
+//               onClick={handleHistory}
+//               className="w-full py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
+//             >
+//               History
+//             </button>
+//             <button
+//               onClick={handlePayment}
+//               className="w-full py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+//             >
+//               Payment
+//             </button>
+//             <button
+//               onClick={handleLogout}
+//               className="w-full py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+//             >
+//               Log Out
+//             </button>
+//           </div>
 //         </div>
 //       </aside>
 
 //       {/* Main Content */}
 //       <main className="flex-1 p-6">
-//         <h1 className="text-3xl font-bold mb-6">Manage Categories & Products</h1>
+//         <h1 className="text-2xl md:text-3xl font-bold mb-6">
+//           Manage Categories & Products
+//         </h1>
 
-//         {/* Category Tabs */}
-//         <div className="flex gap-4 mb-6">
+//         {/* Category Buttons */}
+//         <div className="flex flex-wrap gap-3 mb-6">
 //           {categories.map((cat) => (
 //             <div key={cat.id} className="flex items-center gap-2">
 //               <button
@@ -162,8 +202,6 @@
 //               </button>
 //             </div>
 //           ))}
-
-//           {/* Add Category */}
 //           <button
 //             onClick={() => setAddingCategory(true)}
 //             className="px-4 py-2 rounded bg-green-500 text-white"
@@ -173,7 +211,7 @@
 //         </div>
 
 //         {/* Products Grid */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 //           {categories
 //             .find((cat) => cat.id === selectedCategory)
 //             ?.products.map((prod) => (
@@ -207,13 +245,22 @@
 //                   >
 //                     Delete
 //                   </button>
+//                   <button
+//                     onClick={() => alert(`Booking product: ${prod.name}`)}
+//                     className="flex-1 bg-green-600 text-white py-1 rounded"
+//                   >
+//                     Book Now
+//                   </button>
 //                 </div>
 //               </div>
 //             ))}
 
-//           {/* Add Product Card */}
+//           {/* Add New Product Card */}
 //           <div
-//             onClick={() => setAddingProduct(true)}
+//             onClick={() => {
+//               setAddingProduct(true);
+//               setEditingProduct(null);
+//             }}
 //             className="bg-gray-200 p-4 rounded-lg shadow flex flex-col items-center justify-center cursor-pointer hover:bg-gray-300"
 //           >
 //             <span className="text-4xl">➕</span>
@@ -221,7 +268,7 @@
 //           </div>
 //         </div>
 
-//         {/* Edit/Add Category Form */}
+//         {/* Category Form */}
 //         {(editingCategory || addingCategory) && (
 //           <CategoryForm
 //             category={editingCategory}
@@ -233,14 +280,15 @@
 //           />
 //         )}
 
-//         {/* Edit/Add Product Form */}
-//         {(editingProduct || addingProduct) && (
+//         {/* Product Form */}
+//         {(addingProduct || editingProduct) && (
 //           <ProductForm
-//             product={editingProduct}
+//             key={addingProduct ? "new-product" : editingProduct?.id}
+//             product={editingProduct || undefined}
 //             onSave={handleSaveProduct}
 //             onCancel={() => {
-//               setEditingProduct(null);
 //               setAddingProduct(false);
+//               setEditingProduct(null);
 //             }}
 //           />
 //         )}
@@ -249,7 +297,8 @@
 //   );
 // }
 
-// /* Category Form */
+
+
 // function CategoryForm({ category = {}, onSave, onCancel }) {
 //   const [cat, setCat] = useState(category.id ? category : { name: "" });
 
@@ -287,7 +336,6 @@
 //   );
 // }
 
-// /* Product Form */
 // function ProductForm({ product = {}, onSave, onCancel }) {
 //   const [prod, setProd] = useState(
 //     product.id
@@ -399,8 +447,9 @@
 
 // export default DsBrand;
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ for navigation
+import user from "../assets/user.png";
 
-// Main Component
 function DsBrand() {
   const [categories, setCategories] = useState([
     {
@@ -465,11 +514,25 @@ function DsBrand() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [addingCategory, setAddingCategory] = useState(false);
 
-  // Category functions
+  const navigate = useNavigate(); // ✅ init navigation
+
+  const handleLogout = () => {
+    navigate("/Login"); // redirect to login page
+  };
+
+  const handleHistory = () => {
+    navigate("/Brandhistory"); // ✅ go to Brandhistory page
+  };
+
+  const handlePayment = () => {
+    navigate("/Brandpayment"); // ✅ go to Brandpayment page
+  };
+
   const handleSaveCategory = (cat) => {
+    if (!cat) return;
     if (editingCategory) {
       setCategories(
-        categories.map((c) => (c.id === cat.id ? { ...c, name: cat.name } : c))
+        categories.map((c) => (c.id === cat.id ? { ...c, ...cat } : c))
       );
       setEditingCategory(null);
     } else {
@@ -485,7 +548,6 @@ function DsBrand() {
     }
   };
 
-  // Product functions
   const handleSaveProduct = (prod) => {
     setCategories(
       categories.map((cat) =>
@@ -497,7 +559,10 @@ function DsBrand() {
                   p.id === prod.id ? prod : p
                 ),
               }
-            : { ...cat, products: [...cat.products, { ...prod, id: Date.now() }] }
+            : {
+                ...cat,
+                products: [...cat.products, { ...prod, id: Date.now() }],
+              }
           : cat
       )
     );
@@ -516,26 +581,50 @@ function DsBrand() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 mt-15">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg p-6">
-        <div className="flex flex-col items-center">
+      <aside className="w-full md:w-64 bg-white shadow-lg p-6 flex-shrink-0">
+        <div className="flex flex-col items-center text-center mt-[65px]">
           <img
-            src="https://via.placeholder.com/80"
+            src={user}
             alt="Profile"
             className="w-20 h-20 rounded-full border"
           />
           <h2 className="mt-3 text-lg font-semibold">BrandUser</h2>
           <p className="text-sm text-gray-500">brand@example.com</p>
+
+          {/* Action Buttons */}
+          <div className="mt-6 w-full space-y-3">
+            <button
+              onClick={handleHistory}
+              className="w-full py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
+            >
+              History
+            </button>
+            <button
+              onClick={handlePayment}
+              className="w-full py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition"
+            >
+              Payment
+            </button>
+            <button
+              onClick={handleLogout}
+              className="w-full py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+            >
+              Log Out
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 p-6">
-        <h1 className="text-3xl font-bold mb-6">Manage Categories & Products</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">
+          Manage Categories & Products
+        </h1>
 
-        {/* Category Tabs */}
-        <div className="flex gap-4 mb-6">
+        {/* Category Buttons */}
+        <div className="flex flex-wrap gap-3 mb-6">
           {categories.map((cat) => (
             <div key={cat.id} className="flex items-center gap-2">
               <button
@@ -562,8 +651,6 @@ function DsBrand() {
               </button>
             </div>
           ))}
-
-          {/* Add Category */}
           <button
             onClick={() => setAddingCategory(true)}
             className="px-4 py-2 rounded bg-green-500 text-white"
@@ -573,7 +660,7 @@ function DsBrand() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories
             .find((cat) => cat.id === selectedCategory)
             ?.products.map((prod) => (
@@ -607,15 +694,21 @@ function DsBrand() {
                   >
                     Delete
                   </button>
+                  <button
+                    onClick={() => alert(`Booking product: ${prod.name}`)}
+                    className="flex-1 bg-green-600 text-white py-1 rounded"
+                  >
+                    Book Now
+                  </button>
                 </div>
               </div>
             ))}
 
-          {/* Add Product Card */}
+          {/* Add New Product Card */}
           <div
             onClick={() => {
               setAddingProduct(true);
-              setEditingProduct(null); // reset edit state
+              setEditingProduct(null);
             }}
             className="bg-gray-200 p-4 rounded-lg shadow flex flex-col items-center justify-center cursor-pointer hover:bg-gray-300"
           >
@@ -624,7 +717,7 @@ function DsBrand() {
           </div>
         </div>
 
-        {/* Edit/Add Category Form */}
+        {/* Category Form */}
         {(editingCategory || addingCategory) && (
           <CategoryForm
             category={editingCategory}
@@ -636,11 +729,11 @@ function DsBrand() {
           />
         )}
 
-        {/* Edit/Add Product Form */}
+        {/* Product Form */}
         {(addingProduct || editingProduct) && (
           <ProductForm
             key={addingProduct ? "new-product" : editingProduct?.id}
-            product={editingProduct || undefined} // undefined ensures new form
+            product={editingProduct || undefined}
             onSave={handleSaveProduct}
             onCancel={() => {
               setAddingProduct(false);
@@ -653,14 +746,15 @@ function DsBrand() {
   );
 }
 
-/* Category Form */
-function CategoryForm({ category = {}, onSave, onCancel }) {
-  const [cat, setCat] = useState(category.id ? category : { name: "" });
+// ✅ FIXED CategoryForm
+function CategoryForm({ category, onSave, onCancel }) {
+  const initial = category ?? {};
+  const [cat, setCat] = useState(initial?.id ? { ...initial } : { name: "" });
 
   return (
     <div className="mt-6 bg-white p-4 rounded-lg shadow space-y-3">
       <h2 className="font-bold text-lg">
-        {category.id ? "Edit Category" : "Add New Category"}
+        {initial?.id ? "Edit Category" : "Add New Category"}
       </h2>
 
       <div>
@@ -675,12 +769,14 @@ function CategoryForm({ category = {}, onSave, onCancel }) {
 
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={() => onSave(cat)}
           className="flex-1 py-2 bg-indigo-600 text-white rounded-lg"
         >
           Save
         </button>
         <button
+          type="button"
           onClick={onCancel}
           className="flex-1 py-2 bg-gray-400 text-white rounded-lg"
         >
@@ -691,7 +787,6 @@ function CategoryForm({ category = {}, onSave, onCancel }) {
   );
 }
 
-/* Product Form */
 function ProductForm({ product = {}, onSave, onCancel }) {
   const [prod, setProd] = useState(
     product.id
@@ -785,29 +880,20 @@ function ProductForm({ product = {}, onSave, onCancel }) {
 
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={() => onSave(prod)}
           className="flex-1 py-2 bg-indigo-600 text-white rounded-lg"
         >
           Save
         </button>
         <button
+          type="button"
           onClick={onCancel}
           className="flex-1 py-2 bg-gray-400 text-white rounded-lg"
         >
           Cancel
         </button>
       </div>
-      {(addingCategory || editingCategory) && (
-  <CategoryForm
-    key={editingCategory ? `edit-cat-${editingCategory.id}` : "new-cat"} // important
-    category={editingCategory || undefined} // undefined ensures new form
-    onSave={handleSaveCategory}
-    onCancel={() => {
-      setAddingCategory(false);
-      setEditingCategory(null);
-    }}
-  />
-)}
     </div>
   );
 }

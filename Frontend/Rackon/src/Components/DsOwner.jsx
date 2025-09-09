@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigate
+import { useNavigate } from "react-router-dom";
 import user from "../assets/user.png";
 import s1 from "../assets/s1.jpg";
 import s2 from "../assets/s2.jpg";
 import s3 from "../assets/s3.jpg";
 
 function DsOwner() {
-  const navigate = useNavigate(); // ✅ Initialize navigation
+  const navigate = useNavigate();
 
   const [shelves, setShelves] = useState([
     {
@@ -40,42 +40,34 @@ function DsOwner() {
 
   const [editingShelf, setEditingShelf] = useState(null);
 
-  // ✅ Delete shelf
   const handleDelete = (id) => {
     setShelves(shelves.filter((shelf) => shelf.id !== id));
   };
 
-  // ✅ Logout function with navigation
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (confirmLogout) {
-      localStorage.removeItem("user"); // optional: clear user session
-      navigate("/login"); // ✅ Navigate to Login.jsx
+      localStorage.removeItem("user");
+      navigate("/login");
     }
   };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <aside className="w-full lg:w-64 bg-white shadow-lg p-6 flex-shrink-0">
-        {/* Profile Info */}
         <div className="flex flex-col items-center mt-4">
-          {/* ✅ Perfect Circle Profile */}
           <div className="w-32 h-32 rounded-full mt-15 border-4 border-gray-200 shadow-md overflow-hidden bg-white flex items-center justify-center">
             <img
-              src={user} // Replace with user image
+              src={user}
               alt="Profile"
               className="w-full h-full object-cover object-center"
             />
           </div>
-
           <h2 className="mt-4 text-xl font-semibold text-gray-800">
             Dhruvi123
           </h2>
           <p className="text-sm text-gray-500">dhruvi@example.com</p>
         </div>
-
-        {/* Sidebar Buttons */}
         <div className="mt-10 space-y-4 w-full">
           <button
             onClick={() => navigate("/History")}
@@ -99,14 +91,10 @@ function DsOwner() {
           </button>
         </div>
       </aside>
-
-      {/* Main Content */}
       <main className="flex-1 p-6">
         <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
           Manage Shelves
         </h1>
-
-        {/* Shelves Grid */}
         <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {shelves.map((shelf) => (
             <div
