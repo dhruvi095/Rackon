@@ -4,11 +4,7 @@ from django.contrib import admin
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-<<<<<<< HEAD
-from .models import User
-=======
 from .models import *
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 
 class CustomUserAdmin(UserAdmin):
     model = User
@@ -28,7 +24,4 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('username',)
 
 admin.site.register(User, CustomUserAdmin)
-<<<<<<< HEAD
-=======
 admin.site.register(PasswordResetOTP)
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2

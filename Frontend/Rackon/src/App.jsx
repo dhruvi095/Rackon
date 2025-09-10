@@ -12,6 +12,8 @@ import DsOwner from './Components/DsOwner'
 import History from './Components/History'
 import Payment from './Components/Payment'
 import DsBrand from './Components/DsBrand';
+<<<<<<< HEAD
+=======
 import Contact from './Components/Contact'
 import TC from './Components/TC'
 import PP from './Components/PP'
@@ -20,6 +22,11 @@ import Brandhistory from './Components/Brandhistory'
 import Brandpayment from './Components/Brandpayment'
 import Magazine from './Components/Magazine'
 
+<<<<<<< HEAD
+=======
+>>>>>>> 9e84105f3300a8532a19ac40079648becba2bc60
+>>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
+>>>>>>> 5589f87b736b9d1e1f2dd2002013fdc87f53e1dd
 function Layout({ children }) {
   const location = useLocation();
   const hideHeaderFooter = location.pathname === "/Sign" || location.pathname === "/Login" || location.pathname === "/Reset" || location.pathname === "/OTP";
@@ -39,6 +46,7 @@ function App() {
   return (
     <Router>
       <Layout>
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Sign" element={<Sign />} />
@@ -50,16 +58,29 @@ function App() {
           <Route path="/Payment" element={<Payment />} />
           <Route path="/owner" element={<DsOwner />} />
           <Route path="/brand" element={<DsBrand />} />
+<<<<<<< HEAD
+=======
           <Route path="/Contact" element={<Contact />} />
           <Route path="/TC" element={<TC />} />
           <Route path="/PP" element={<PP />} />
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/Brandhistory" element={<Brandhistory />} />
           <Route path="/Brandpayment" element={<Brandpayment />} />
+<<<<<<< HEAD
           <Route path="/Magazine" element={<Magazine />} />
+=======
+>>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
+>>>>>>> 5589f87b736b9d1e1f2dd2002013fdc87f53e1dd
         </Routes>
+      
       </Layout>
     </Router>
+
+
   )
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
 export default App

@@ -7,11 +7,12 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
+    product_name = models.CharField(max_length=255)
     brand = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
     shelf = models.ForeignKey("shelves.Shelf", on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     booking = models.ForeignKey("bookings.Booking", on_delete=models.CASCADE, related_name='products', null=True, blank=True)
-    quantity = models.PositiveIntegerField(default=0)
+    quantity_stored = models.PositiveIntegerField(default=0)
+    quantity_sold = models.IntegerField(default=0)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -20,4 +21,4 @@ class Product(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.name} ({self.brand.username})"
+        return f"{self.product_name} ({self.brand.username})"

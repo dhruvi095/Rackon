@@ -1,9 +1,5 @@
 from django.db import models
 from users.models import User
-<<<<<<< HEAD
-
-class Shelf(models.Model):
-=======
 from products.models import Product
 
 class Shelf(models.Model):
@@ -16,16 +12,12 @@ class Shelf(models.Model):
         ("Book / Art Launch", "Book / Art Launch"),
         ("Other", "Other"),
     ]
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shelves')
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     size = models.CharField(max_length=50)  # e.g., "Small", "Medium", "Large"
     visibility = models.CharField(max_length=50)  # e.g., "High", "Medium", "Low"
-<<<<<<< HEAD
-=======
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES, default='Retail / Pop-up store')
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
     rent = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='shelf_images/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -47,8 +39,6 @@ class ShelfImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.shelf.name}"
-<<<<<<< HEAD
-=======
 
 
 class ShelfInventory(models.Model):
@@ -64,4 +54,3 @@ class ShelfInventory(models.Model):
 
     def __str__(self):
         return f"{self.product.name} on {self.shelf.name} ({self.quantity})"
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2

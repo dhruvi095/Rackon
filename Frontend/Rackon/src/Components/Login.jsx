@@ -33,6 +33,17 @@ const Login = () => {
                 sessionStorage.setItem("user", JSON.stringify(user));
             }
 
+<<<<<<< HEAD
+      if (user.role === "owner") navigate("/owner");
+      else if (user.role === "brand") navigate("/brand");
+      else navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed. Check credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+=======
             if (user.role === "owner") navigate("/owner/dashboard");
             else if (user.role === "brand") navigate("/brand/dashboard");
             else navigate("/");
@@ -44,6 +55,7 @@ const Login = () => {
     };
     const handleForgotPassword = async () => {
         const email = prompt("Enter your registered email for password reset");
+>>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
 
         if (!email) {
             setError("Email is required");

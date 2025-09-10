@@ -1,16 +1,10 @@
 from notifications.models import Notification
 from rest_framework import generics, permissions
 from .models import Notification
-<<<<<<< HEAD
-from .serializers import NotificationSerializer
-from rest_framework.response import Response
-
-=======
 from rest_framework import status
 from .serializers import NotificationSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 
 class NotificationListView(generics.ListAPIView):
     serializer_class = NotificationSerializer
@@ -19,17 +13,6 @@ class NotificationListView(generics.ListAPIView):
     def get_queryset(self):
         return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
 
-<<<<<<< HEAD
-class NotificationMarkReadView(generics.UpdateAPIView):
-    serializer_class = NotificationSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Notification.objects.filter(recipient=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.save(is_read=True)
-=======
 class NotificationMarkReadView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -60,7 +43,6 @@ class NotificationMarkReadView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 
 class UnreadNotificationListView(generics.ListAPIView):
     serializer_class = NotificationSerializer
@@ -74,10 +56,6 @@ class NotificationMarkAllReadView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
-<<<<<<< HEAD
-        Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
-        return Response({"detail": "All notifications marked as read."})
-=======
         Notification.objects.filter(
             recipient=request.user,
             is_read=False
@@ -86,4 +64,3 @@ class NotificationMarkAllReadView(generics.UpdateAPIView):
 
     def post(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
