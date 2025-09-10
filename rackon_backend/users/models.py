@@ -1,11 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-<<<<<<< HEAD
-=======
 from django.utils import timezone
 from datetime import timedelta
 import random
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 
 class User(AbstractUser):
     ROLE_CHOICES = (
@@ -13,12 +10,8 @@ class User(AbstractUser):
         ('brand', 'Brand'),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-<<<<<<< HEAD
-
-    def __str__(self):
-        return f"{self.username} ({self.role})"
-=======
     profile_image = models.ImageField(upload_to='images/', null=True, blank=True, default='defaults/default_avatar.png')
+    phone_number = models.CharField(max_length=15, blank=True, null=True)   
 
     def save(self, *args, **kwargs):
         # Ensure default avatar is always set if empty
@@ -46,4 +39,3 @@ class PasswordResetOTP(models.Model):
     def generate_otp():
         return str(random.randint(1000, 9999))
     
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2

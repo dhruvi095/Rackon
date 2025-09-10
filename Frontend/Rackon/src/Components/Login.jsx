@@ -34,8 +34,8 @@ const Login = () => {
         sessionStorage.setItem("user", JSON.stringify(user));
       }
 
-      if (user.role === "owner") navigate("/owner/dashboard");
-      else if (user.role === "brand") navigate("/brand/dashboard");
+      if (user.role === "owner") navigate("/owner");
+      else if (user.role === "brand") navigate("/brand");
       else navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Check credentials.");

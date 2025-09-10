@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-from rest_framework import generics
-from .serializers import UserSerializer
-from .models import User
-=======
 from rest_framework import generics, permissions, status
 from .serializers import *
 from .models import *
@@ -12,23 +7,20 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
+from rest_framework.permissions import IsAuthenticated
 
 
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-<<<<<<< HEAD
-    
-=======
     
 # Custom login view
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer    
 
 class ProfileImageUploadView(generics.UpdateAPIView):
-    serializer_class = UserSerializer
+    serializer_class = ProfileImageUpdateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
@@ -144,4 +136,15 @@ def get_email_from_username(request):
         return Response({"email": user.email})
     except User.DoesNotExist:
         return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
->>>>>>> 6a7aeac8ac21e36e7c4d32aa04c14446c07a7ca2
+
+
+@api_view(['GET'])
+def get_user_profile(request):
+    user = request.user
+    profile_data = {
+        "name": user.username,
+        "email": user.email,
+        "phone": user.phone_number,  # Make sure this field exists in your User model
+        "image": user.profile_image.url if user.profile_image else None,
+    }
+    return Response(profile_data)

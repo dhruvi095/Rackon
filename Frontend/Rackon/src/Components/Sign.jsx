@@ -7,6 +7,7 @@ const Sign = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState(""); // NEW: phone state
   const [role, setRole] = useState("brand");  // Default role
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,20 +15,21 @@ const Sign = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError("");
-
     setLoading(true);
+    
     try {
       await axios.post("http://localhost:8000/api/auth/register/", {
         username,
         email,
         password,
-        role,  // Send selected role
+        phone_number: phone,
+        role,
       });
 
       alert("Registration successful! Please login.");
       navigate("/login");
     } catch (err) {
-      console.error(err.response?.data); 
+      console.error("Registration error:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
@@ -35,7 +37,7 @@ const Sign = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-15 pb-15">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-blue-600">Rackon</h1>
@@ -63,6 +65,18 @@ const Sign = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
+              required
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Enter phone number"
               required
               className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
             />
