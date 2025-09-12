@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
+=======
+import React, { useEffect, useState } from "react";
+>>>>>>> 347d788501a250d344b416f6debff99664b513bf
 import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); 
   const [helpOpen, setHelpOpen] = useState(false);
+<<<<<<< HEAD
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+=======
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+>>>>>>> 347d788501a250d344b416f6debff99664b513bf
   const toggleHelp = () => {
     if (isAuthenticated) {
       setHelpOpen(!helpOpen);
@@ -30,7 +38,7 @@ const Header = () => {
           </div>
 
           <nav className="hidden md:flex items-center space-x-6 text-black font-medium">
-            <a href="#" className="hover:text-green-600">Magazine</a>
+            <a href="/Magazine" className="hover:text-green-600">Magazine</a>
 
             <div className="relative group">
               <button

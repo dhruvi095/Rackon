@@ -19,6 +19,16 @@ import PP from './Components/PP'
 import FAQ from './Components/FAQ'
 import Brandhistory from './Components/Brandhistory'
 import Brandpayment from './Components/Brandpayment'
+<<<<<<< HEAD
+=======
+import Magazine from './Components/Magazine'
+
+<<<<<<< HEAD
+=======
+>>>>>>> 9e84105f3300a8532a19ac40079648becba2bc60
+>>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
+>>>>>>> 5589f87b736b9d1e1f2dd2002013fdc87f53e1dd
+>>>>>>> 347d788501a250d344b416f6debff99664b513bf
 function Layout({ children }) {
   const location = useLocation();
   const hideHeaderFooter = location.pathname === "/Sign" || location.pathname === "/Login" || location.pathname === "/Reset" || location.pathname === "/OTP";
@@ -61,6 +71,14 @@ function App() {
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/Brandhistory" element={<Brandhistory />} />
           <Route path="/Brandpayment" element={<Brandpayment />} />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+          <Route path="/Magazine" element={<Magazine />} />
+=======
+>>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
+>>>>>>> 5589f87b736b9d1e1f2dd2002013fdc87f53e1dd
+>>>>>>> 347d788501a250d344b416f6debff99664b513bf
         </Routes>
 
       </Layout>

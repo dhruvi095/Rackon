@@ -221,6 +221,7 @@ function Home() {
             </button>
           </div>
 
+<<<<<<< HEAD
           {loading ? (
             <p>Loading shelves...</p>
           ) : spaces.length === 0 ? (
@@ -261,6 +262,56 @@ function Home() {
       </section>
 
 
+=======
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {loading ? (
+              <p>Loading shelves...</p>
+            ) : spaces.length === 0 ? (
+              <p>No available shelves at the moment.</p>
+            ) : (
+              <div
+                className={`${
+                  spaces.length > 3
+                    ? "flex gap-6 overflow-x-auto py-2 scrollbar-hide snap-x scroll-smooth"
+                    : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+                }`}
+              >
+                {spaces.map((space) => (
+                  <div
+                    key={space.id}
+                    className={`${
+                      spaces.length > 3
+                        ? "min-w-[300px] flex-shrink-0 snap-start"
+                        : ""
+                    } bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden`}
+                  >
+                    <img
+                      src={
+                        space.images?.[0]?.image || space.image || "/placeholder.jpg"
+                      }
+                      alt={space.event_type || "Shelf"}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="p-5">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {space.location}
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {space.size} • {space.event_type || "General"}
+                      </p>
+                      <p className="text-green-600 font-semibold mt-2">
+                        ₹{space.rent} / month
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+>>>>>>> 347d788501a250d344b416f6debff99664b513bf
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center mb-12">

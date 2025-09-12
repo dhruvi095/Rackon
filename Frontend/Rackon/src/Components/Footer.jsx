@@ -14,82 +14,69 @@ const Footer = () => {
 
   return (
     <footer className="bg-black text-gray-300">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="col-span-1 flex flex-col justify-between">
-          <h2 className="text-2xl font-bold text-white">RACKON</h2>
-          <div className="flex-1"></div>
-        </div>
-
-        <div className="col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-white font-semibold mb-3">Company</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">About</a></li>
-              <li><a href="#">Press</a></li>
-              <li><a href="#">Careers</a></li>
-            </ul>
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex flex-col lg:flex-row lg:items-start gap-12">
+          {/* Logo */}
+          <div className="flex-shrink-0 text-center lg:text-left">
+            <h2 className="text-2xl font-bold text-white">RACKON</h2>
           </div>
 
-          <div>
-            <h3 className="text-white font-semibold mb-3">Explore</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">Activities</a></li>
-              <li><a href="#">Locations</a></li>
-              <li><a href="#">Resources</a></li>
-              <li><a href="#">Ambassador</a></li>
-              <li><a href="#">Program</a></li>
-            </ul>
-          </div>
+          {/* Links Section */}
+          <div className="flex-1 flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-2 lg:flex lg:flex-row lg:justify-between lg:ml-40 gap-8 text-center sm:text-left">
+            {/* Company */}
+            <div>
+              <h3 className="text-white font-semibold mb-3">Get to Know us</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#">About</a></li>
+                <li><a href="#">Press</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </div>
 
-          <div>
-            <h3 className="text-white font-semibold mb-3">Host</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">List your space</a></li>
-              <li><a href="#">Community</a></li>
-            </ul>
-          </div>
+            {/* Explore */}
+            <div>
+              <h3 className="text-white font-semibold mb-3">Explore</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#">Activities</a></li>
+                <li><a href="#">Locations</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Ambassador</a></li>
+                <li><a href="#">Program</a></li>
+              </ul>
+            </div>
 
-          <div>
-            <h3 className="text-white font-semibold mb-3">Countries</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">Deutschland</a></li>
-              <li><a href="#">United Kingdom</a></li>
-              <li><a href="#">United States</a></li>
-              <li><a href="#">Canada</a></li>
-              <li><a href="#">Australia</a></li>
-              <li><a href="#">España</a></li>
-              <li><a href="#">France</a></li>
-            </ul>
-          </div>
+            {/* Countries */}
+            <div>
+              <h3 className="text-white font-semibold mb-3">Countries</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#">India</a></li>
+                <li><a href="#">United Kingdom</a></li>
+              </ul>
+            </div>
 
-          <div>
-            <h3 className="text-white font-semibold mb-3">Help</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href={isAuthenticated ? "/Contact" : "/login"}>Contact Us</a>
-              </li>
-              <li>
-                <a href={isAuthenticated ? "/TC" : "/login"}>Terms & Conditions</a>
-              </li>
-              <li>
-                <a href={isAuthenticated ? "/PP" : "/login"}>Privacy Policy</a>
-              </li>
-              <li>
-                <a href={isAuthenticated ? "/FAQ" : "/login"}>FAQ's</a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-white font-semibold mb-3">Download</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">App Store</a></li>
-              <li><a href="#">Google Play Store</a></li>
-            </ul>
+            {/* Help */}
+            <div>
+              <h3 className="text-white font-semibold mb-3">Help</h3>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a href={isAuthenticated ? "/Contact" : "/login"}>Contact Us</a>
+                </li>
+                <li>
+                  <a href={isAuthenticated ? "/TC" : "/login"}>Terms & Conditions</a>
+                </li>
+                <li>
+                  <a href={isAuthenticated ? "/PP" : "/login"}>Privacy Policy</a>
+                </li>
+                <li>
+                  <a href={isAuthenticated ? "/FAQ" : "/login"}>FAQ's</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Bottom bar */}
       <div className="border-t border-gray-700 py-6 px-6 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
         <p className="text-sm text-center md:text-left">© Rackon</p>
         <div className="flex flex-wrap justify-center md:justify-end gap-5 text-xl text-gray-400">
