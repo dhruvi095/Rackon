@@ -6,6 +6,9 @@ from .permissions import IsBookingOwnerOrReadOnly, IsRetailerShelfOwner
 from django.utils.timezone import now
 from django.db.models import Prefetch
 from shelves.models import Shelf
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 # 👇 Import role-based permissions
 from users.permissions import IsOwner, IsBrand
@@ -33,13 +36,15 @@ class BookingListCreateView(generics.ListCreateAPIView):
         ).order_by('-created_at')
 
     def perform_create(self, serializer):
-        # ✅ Only brands can create bookings
         if self.request.user.role != "brand":
             raise PermissionDenied("Only brands can make bookings.")
 
-        shelf = serializer.validated_data['shelf']
-        start_date = serializer.validated_data['start_date']
-        end_date = serializer.validated_data['end_date']
+        shelf = serializer.validated_data.get('shelf')
+        start_date = serializer.validated_data.get('start_date')
+        end_date = serializer.validated_data.get('end_date')
+
+        if not (shelf and start_date and end_date):
+            raise PermissionDenied("shelf, start_date, and end_date are required.")
 
         if Booking.objects.filter(
             shelf=shelf,
@@ -73,3 +78,12 @@ class BookingStatusUpdateView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class MyBookingsView(generics.ListAPIView):
+    serializer_class = BookingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Booking.objects.filter(brand=user).select_related('shelf', 'brand','payment')

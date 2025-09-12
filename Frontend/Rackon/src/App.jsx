@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import { AuthProvider } from './Components/AuthContext';
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Home from './Components/Home'
 import Header from './Components/Header'
@@ -12,19 +13,12 @@ import DsOwner from './Components/DsOwner'
 import History from './Components/History'
 import Payment from './Components/Payment'
 import DsBrand from './Components/DsBrand';
-<<<<<<< HEAD
-=======
 import Contact from './Components/Contact'
 import TC from './Components/TC'
 import PP from './Components/PP'
 import FAQ from './Components/FAQ'
 import Brandhistory from './Components/Brandhistory'
 import Brandpayment from './Components/Brandpayment'
-<<<<<<< HEAD
-=======
-
->>>>>>> 9e84105f3300a8532a19ac40079648becba2bc60
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
 function Layout({ children }) {
   const location = useLocation();
   const hideHeaderFooter = location.pathname === "/Sign" || location.pathname === "/Login" || location.pathname === "/Reset" || location.pathname === "/OTP";
@@ -41,6 +35,11 @@ function Layout({ children }) {
 function App() {
   const [count, setCount] = useState(0)
 
+  // Kill Razorpay v2 if injected before our hook runs
+  document.querySelectorAll('script[src*="checkout.razorpay.com/v2/checkout.js"]').forEach(el => el.remove());
+  if (window.Razorpay) delete window.Razorpay;
+
+
   return (
     <Router>
       <Layout>
@@ -56,25 +55,19 @@ function App() {
           <Route path="/Payment" element={<Payment />} />
           <Route path="/owner" element={<DsOwner />} />
           <Route path="/brand" element={<DsBrand />} />
-<<<<<<< HEAD
-=======
           <Route path="/Contact" element={<Contact />} />
           <Route path="/TC" element={<TC />} />
           <Route path="/PP" element={<PP />} />
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/Brandhistory" element={<Brandhistory />} />
           <Route path="/Brandpayment" element={<Brandpayment />} />
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
         </Routes>
-      
+
       </Layout>
     </Router>
 
 
+
   )
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
 export default App

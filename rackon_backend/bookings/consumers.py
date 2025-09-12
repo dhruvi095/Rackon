@@ -1,13 +1,16 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-class BookingConsumer(AsyncWebsocketConsumer):
+class BookingsConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        await self.channel_layer.group_add("bookings", self.channel_name)
         await self.accept()
+        # Optionally, send initial message
+        await self.send(text_data=json.dumps({"message": "Connected to bookings WS"}))
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard("bookings", self.channel_name)
+        pass
 
-    async def new_booking(self, event):
-        await self.send(text_data=json.dumps(event["data"]))
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        # Echo message back
+        await self.send(text_data=json.dumps({"echo": data}))

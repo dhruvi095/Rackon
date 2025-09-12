@@ -7,20 +7,18 @@ from bookings.utils import update_shelf_availability
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from bookings.serializers import BookingSerializer
-from notifications.serializers import NotificationSerializer 
-
+from notifications.serializers import NotificationSerializer
 
 # 🔔 WebSocket notifier
-def send_ws_notification(user_id, data):
+def send_ws_notification(user_id, notif):
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"user_{user_id}",
         {
             "type": "send_notification",
-            "content": NotificationSerializer(notif).data, # serialize notification
+            "content": NotificationSerializer(notif).data,  # serialize notification
         }
     )
-
 
 @receiver(post_save, sender=Booking)
 def booking_saved(sender, instance, created, **kwargs):
@@ -32,16 +30,10 @@ def booking_saved(sender, instance, created, **kwargs):
             recipient=instance.shelf.owner,
             type="booking",
             message=f"📌 New booking request from {instance.brand.username} for shelf {instance.shelf.name}.",
-            booking=instance  # ✅ linked booking
+            booking=instance  # pass Booking instance, NOT id
         )
         # Push via WebSocket
-        send_ws_notification(instance.shelf.owner.id, {
-            "id": notif.id,
-            "message": notif.message,
-            "type": notif.type,
-            "created_at": str(notif.created_at),
-            "booking": BookingSerializer(instance).data,  # ✅ include booking details for frontend lookup
-        })
+        send_ws_notification(instance.shelf.owner.id, notif)
 
     else:
         if instance.status in ["accepted", "rejected", "cancelled", "expired"]:
@@ -50,16 +42,9 @@ def booking_saved(sender, instance, created, **kwargs):
                 recipient=instance.brand,
                 type="booking",
                 message=f"ℹ️ Your booking for {instance.shelf.name} was {instance.status}.",
-                booking=instance  # ✅ linked booking
+                booking=instance  # pass Booking instance
             )
-            send_ws_notification(instance.brand.id, {
-                "id": notif.id,
-                "message": notif.message,
-                "type": notif.type,
-                "created_at": str(notif.created_at),
-                "booking": BookingSerializer(instance).data,
-            })
-
+            send_ws_notification(instance.brand.id, notif)
 
 @receiver(post_delete, sender=Booking)
 def booking_deleted(sender, instance, **kwargs):
@@ -70,12 +55,6 @@ def booking_deleted(sender, instance, **kwargs):
         recipient=instance.brand,
         type="booking",
         message=f"❌ Your booking for {instance.shelf.name} was deleted.",
-        booking=instance  # ✅ still link (though deleted, ID is useful)
+        booking=instance  # pass Booking instance
     )
-    send_ws_notification(instance.brand.id, {
-        "id": notif.id,
-        "message": notif.message,
-        "type": notif.type,
-        "created_at": str(notif.created_at),
-        "booking": instance.id,
-    })
+    send_ws_notification(instance.brand.id, notif)

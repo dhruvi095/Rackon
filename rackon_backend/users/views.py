@@ -4,11 +4,10 @@ from .models import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
 from django.core.mail import send_mail
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
 
 
 class RegisterView(generics.CreateAPIView):
@@ -148,3 +147,27 @@ def get_user_profile(request):
         "image": user.profile_image.url if user.profile_image else None,
     }
     return Response(profile_data)
+
+
+class UserProfileUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        data = request.data
+
+        # Update user fields
+        user.username = data.get('username', user.username)
+        user.email = data.get('email', user.email)
+        user.phone_number = data.get('phone_number', user.phone_number)
+
+        user.save()
+
+        return Response({
+            "name": user.username,
+            "email": user.email,
+            "phone": user.phone_number,
+            "image": user.profile_image.url if user.profile_image else None,
+        })
+
+

@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from "react";
-
-const Header = () => {
-
-  // const [isOpen, setIsOpen] = useState(false);
-
-  const [isOpen, setIsOpen] = useState(false); // mobile menu
-  const [helpOpen, setHelpOpen] = useState(false); // help dropdown
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // login/register check
-=======
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
@@ -16,7 +5,6 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
->>>>>>> 9e84105f3300a8532a19ac40079648becba2bc60
 
   const toggleHelp = () => {
     if (isAuthenticated) {

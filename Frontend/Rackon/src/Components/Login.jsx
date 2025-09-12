@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
+
 
 const Login = () => {
+    
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -33,20 +36,10 @@ const Login = () => {
                 sessionStorage.setItem("user", JSON.stringify(user));
             }
 
-<<<<<<< HEAD
-      if (user.role === "owner") navigate("/owner");
-      else if (user.role === "brand") navigate("/brand");
-      else navigate("/");
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Check credentials.");
-    } finally {
-      setLoading(false);
-    }
-  };
-=======
-            if (user.role === "owner") navigate("/owner/dashboard");
-            else if (user.role === "brand") navigate("/brand/dashboard");
-            else navigate("/");
+            if (user.role === "owner") window.location.href = "/owner";
+            else if (user.role === "brand") window.location.href = "/brand";
+            else window.location.href = "/";
+
         } catch (err) {
             setError(err.response?.data?.message || "Login failed. Check credentials.");
         } finally {
@@ -55,7 +48,6 @@ const Login = () => {
     };
     const handleForgotPassword = async () => {
         const email = prompt("Enter your registered email for password reset");
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
 
         if (!email) {
             setError("Email is required");

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import api from "../utils/api";
 
@@ -7,61 +6,18 @@ function DsOwner() {
   const [bookings, setBookings] = useState([]);
   const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, shelves, bookings, earnings, profile
   const [imageFile, setImageFile] = useState(null);
-=======
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import user from "../assets/user.png";
-import s1 from "../assets/s1.jpg";
-import s2 from "../assets/s2.jpg";
-import s3 from "../assets/s3.jpg";
-
-function DsOwner() {
-  const navigate = useNavigate();
-
-  const [shelves, setShelves] = useState([
-    {
-      id: 1,
-      name: "Shelf A",
-      size: "Small",
-      location: "Block 1",
-      rent: 500,
-      img: s1,
-      visibility: "public",
-    },
-    {
-      id: 2,
-      name: "Shelf B",
-      size: "Large",
-      location: "Block 2",
-      rent: 700,
-      img: s2,
-      visibility: "private",
-    },
-    {
-      id: 3,
-      name: "Shelf C",
-      size: "Medium",
-      location: "Block 3",
-      rent: 600,
-      img: s3,
-      visibility: "private",
-    },
-  ]);
-
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
   const [editingShelf, setEditingShelf] = useState(null);
   const [addingShelf, setAddingShelf] = useState(false);
   const [inventoryShelf, setInventoryShelf] = useState(null); // Shelf whose inventory is open
   const [inventoryData, setInventoryData] = useState([]); // List of products stored in that shelf
 
-<<<<<<< HEAD
   const [profile, setProfile] = useState({
     name: "",
     email: "",
     phone: "",
     image: "",
   });
-  
+
   const closeInventory = () => {
     setInventoryShelf(null);
     setInventoryData([]);
@@ -85,6 +41,19 @@ function DsOwner() {
     return () => ws.close();
   }, []);
 
+  // --- UPDATE BOOKING STATUS ---
+  const handleBookingUpdate = async (bookingId, newStatus) => {
+    try {
+      await api.patch(`/bookings/${bookingId}/status/`, { status: newStatus });
+      setBookings((prev) =>
+        prev.map((b) => (b.id === bookingId ? { ...b, status: newStatus } : b))
+      );
+      alert(`Booking ${newStatus}`);
+    } catch (err) {
+      console.error("Error updating booking status:", err.response?.data || err);
+    }
+  };
+
 
   const fetchShelves = async () => {
     try {
@@ -92,17 +61,6 @@ function DsOwner() {
       setShelves(res.data);
     } catch (err) {
       console.error("Error fetching shelves:", err);
-=======
-  const handleDelete = (id) => {
-    setShelves(shelves.filter((shelf) => shelf.id !== id));
-  };
-
-  const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-      localStorage.removeItem("user");
-      navigate("/login");
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
     }
   };
 
@@ -114,6 +72,8 @@ function DsOwner() {
       console.error("Error fetching bookings:", err);
     }
   };
+
+  
 
   const fetchProfile = async () => {
     try {
@@ -131,24 +91,31 @@ function DsOwner() {
     }
   };
 
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = async (updatedShelf) => {
     try {
       const formData = new FormData();
-      formData.append("name", editingShelf.name);
-      formData.append("size", editingShelf.size);
-      formData.append("location", editingShelf.location);
-      formData.append("rent", editingShelf.rent);
-      formData.append("visibility", editingShelf.visibility);
-      formData.append("is_active", editingShelf.is_active);
-      formData.append("currently_available", editingShelf.currently_available);
+      formData.append("name", updatedShelf.name);
+      formData.append("size", updatedShelf.size);
+      formData.append("location", updatedShelf.location);
+      formData.append("rent", updatedShelf.rent);
+      formData.append("event_type", updatedShelf.event_type);
+      formData.append("visibility", updatedShelf.visibility);
+      formData.append("is_active", updatedShelf.is_active);
+      formData.append("currently_available", updatedShelf.currently_available);
 
-      if (editingShelf.imgFile) formData.append("image", editingShelf.imgFile);
+      if (updatedShelf.imgFile) {
+        formData.append("image", updatedShelf.imgFile);
+      }
 
-      await api.put(`/shelves/${editingShelf.id}/`, formData, {
+      const res = await api.put(`/shelves/${updatedShelf.id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      fetchShelves();
+      // Update the local shelves array immediately
+      setShelves((prevShelves) =>
+        prevShelves.map((shelf) => (shelf.id === updatedShelf.id ? res.data : shelf))
+      );
+
       setEditingShelf(null);
     } catch (err) {
       console.error("Error updating shelf:", err);
@@ -172,6 +139,7 @@ function DsOwner() {
       formData.append("size", newShelf.size);
       formData.append("location", newShelf.location);
       formData.append("rent", newShelf.rent);
+      formData.append("event_type", newShelf.event_type);
       formData.append("visibility", newShelf.visibility);
       formData.append("is_active", newShelf.is_active);
       formData.append("currently_available", newShelf.currently_available);
@@ -190,44 +158,36 @@ function DsOwner() {
   };
 
 
-const handleProfileSave = async () => {
-  try {
-    // 1. Update text fields (name, email, phone)
-    await api.patch("/auth/profile/", {
-      username: profile.name,   // backend stores name as username
-      email: profile.email,
-      phone_number: profile.phone,
-    });
-
-    // 2. Update image if provided
-    if (profile.imageFile) {
-      const formData = new FormData();
-      formData.append("profile_image", profile.imageFile); // backend expects profile_image
-      await api.patch("/auth/profile/upload_image/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    }
-
-    alert("Profile saved successfully!");
-    fetchProfile();
-  } catch (err) {
-    console.error("Error updating profile:", err.response?.data || err);
-  }
-};
-
-
-
-  const openInventory = async (shelf) => {
-    setInventoryShelf(shelf);
+  const handleProfileSave = async () => {
     try {
-      const res = await api.get(`/shelves/${shelf.id}/inventory/`);
-      setInventoryData(res.data);
-    } catch (err) {
-      console.error("Error fetching inventory:", err);
-    }
+      // 1. Update text fields (name, email, phone)
+      await api.put("/auth/profile/update/", {
+        username: profile.name,   // backend stores name as username
+        email: profile.email,
+        phone_number: profile.phone,
+      });
 
-    // WebSocket for live updates
-    const ws = new WebSocket(`ws://localhost:8000/ws/shelves/${shelf.id}/`);
+      // 2. Update image if provided
+      if (profile.imageFile) {
+        const formData = new FormData();
+        formData.append("profile_image", profile.imageFile); // backend expects profile_image
+        await api.patch("/auth/profile/upload_image/", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+
+      alert("Profile saved successfully!");
+      fetchProfile();
+    } catch (err) {
+      console.error("Error updating profile:", err.response?.data || err);
+    }
+  };
+
+  useEffect(() => {
+    if (!inventoryShelf) return; // do nothing if no shelf is open
+
+    const ws = new WebSocket(`ws://localhost:8000/ws/shelves/${inventoryShelf.id}/`);
+
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log("Real-time inventory update:", data);
@@ -246,8 +206,20 @@ const handleProfileSave = async () => {
 
     ws.onclose = () => console.log("Inventory WebSocket closed");
 
-    return () => ws.close();
+    return () => ws.close(); // cleanup when inventoryShelf changes or modal closes
+  }, [inventoryShelf]);
+
+
+  const openInventory = async (shelf) => {
+    setInventoryShelf(shelf); // triggers the useEffect below
+    try {
+      const res = await api.get(`/shelves/${shelf.id}/inventory/`);
+      setInventoryData(res.data);
+    } catch (err) {
+      console.error("Error fetching inventory:", err);
+    }
   };
+
 
 
 
@@ -255,7 +227,6 @@ const handleProfileSave = async () => {
   const upcomingBookings = bookings.filter(b => new Date(b.startDate) >= new Date());
 
   return (
-<<<<<<< HEAD
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-lg p-6 flex flex-col justify-between pt-20">
@@ -263,21 +234,12 @@ const handleProfileSave = async () => {
           <div className="flex flex-col items-center mb-6">
             <img
               src={profile.image || "https://via.placeholder.com/80"}
-=======
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
-      <aside className="w-full lg:w-64 bg-white shadow-lg p-6 flex-shrink-0">
-        <div className="flex flex-col items-center mt-4">
-          <div className="w-32 h-32 rounded-full mt-15 border-4 border-gray-200 shadow-md overflow-hidden bg-white flex items-center justify-center">
-            <img
-              src={user}
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover border mb-2"
             />
             <h2 className="font-semibold text-lg">{profile.name}</h2>
             <p className="text-sm text-gray-500">{profile.email}</p>
           </div>
-<<<<<<< HEAD
 
           <nav className="flex flex-col gap-3">
             <button onClick={() => setActiveTab("dashboard")} className={`py-2 px-3 rounded ${activeTab === "dashboard" ? "bg-green-500 text-white" : "bg-gray-200"}`}>Dashboard</button>
@@ -289,38 +251,8 @@ const handleProfileSave = async () => {
         </div>
 
         <button className="py-2 px-3 bg-red-600 text-white rounded hover:bg-red-700">Logout</button>
-=======
-          <h2 className="mt-4 text-xl font-semibold text-gray-800">
-            Dhruvi123
-          </h2>
-          <p className="text-sm text-gray-500">dhruvi@example.com</p>
-        </div>
-        <div className="mt-10 space-y-4 w-full">
-          <button
-            onClick={() => navigate("/History")}
-            className="w-full py-2 px-3 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
-          >
-            History
-          </button>
-
-          <button
-            onClick={() => navigate("/Payment")}
-            className="w-full py-2 px-3 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
-          >
-            Payments
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="w-full py-2 px-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-          >
-            Log Out
-          </button>
-        </div>
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
       </aside>
       <main className="flex-1 p-6">
-<<<<<<< HEAD
         {activeTab === "dashboard" && (
           <div>
             <h1 className="text-3xl font-bold mb-6">Overview</h1>
@@ -411,15 +343,37 @@ const handleProfileSave = async () => {
                 <tbody>
                   {bookings.map((b) => (
                     <tr key={b.id} className="border-b">
-                      <td className="py-2 px-4">{b.shelf}</td>
-                      <td className="py-2 px-4">{b.renter}</td>
-                      <td className="py-2 px-4">{b.startDate}</td>
-                      <td className="py-2 px-4">{b.endDate}</td>
-                      <td className="py-2 px-4">₹{b.amount}</td>
-                      <td className="py-2 px-4">{b.status}</td>
+                      <td className="py-2 px-4">{b.shelf?.name || "N/A"}</td>
+                      <td className="py-2 px-4">{b.renter?.username || "N/A"}</td>
+                      <td className="py-2 px-4">{new Date(b.startDate).toLocaleDateString()}</td>
+                      <td className="py-2 px-4">{new Date(b.endDate).toLocaleDateString()}</td>
+                      <td className="py-2 px-4">₹{b.amount || 0}</td>
+                      <td className="py-2 px-4 flex gap-2 items-center">
+                        {b.status === "pending" ? (
+                          <>
+                            <button
+                              onClick={() => handleBookingUpdate(b.id, "accepted")}
+                              className="bg-green-500 text-white px-2 py-1 rounded"
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={() => handleBookingUpdate(b.id, "rejected")}
+                              className="bg-red-500 text-white px-2 py-1 rounded"
+                            >
+                              Reject
+                            </button>
+                          </>
+                        ) : (
+                          <span className={`px-2 py-1 rounded text-white ${b.status === "accepted" ? "bg-green-500" : b.status === "rejected" ? "bg-red-500" : "bg-gray-500"}`}>
+                            {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
+                          </span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             </div>
           </div>
@@ -502,31 +456,6 @@ const handleProfileSave = async () => {
                   value={profile.phone}
                   onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 />
-=======
-        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
-          Manage Shelves
-        </h1>
-        <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {shelves.map((shelf) => (
-            <div
-              key={shelf.id}
-              className="bg-white p-4 rounded-lg shadow flex flex-col hover:shadow-lg transition"
-            >
-              <img
-                src={shelf.img}
-                alt={shelf.name}
-                className="h-40 w-full object-contain rounded-md bg-gray-50"
-              />
-              <h2 className="mt-3 font-semibold text-lg">{shelf.name}</h2>
-              <p className="text-sm text-gray-600">
-                Size: {shelf.size} | Location: {shelf.location}
-              </p>
-              <p className="text-sm text-gray-600">Rent: ₹{shelf.rent}</p>
-              <p className="text-sm text-gray-600">
-                Visibility: {shelf.visibility}
-              </p>
-              <div className="mt-4 flex gap-2">
->>>>>>> 284a94ec4668710e7673ed97e9a9662bf688cd9a
                 <button
                   className="w-full py-2 bg-indigo-600 text-white rounded-lg mt-2"
                   onClick={handleProfileSave}
@@ -584,7 +513,7 @@ const handleProfileSave = async () => {
 function EditShelfForm({ shelf, onSave, onCancel, setShelf }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow max-w-md w-full">
+      <div className="bg-white p-6 rounded-lg shadow max-w-md w-full h-full overflow-y-auto pt-20 pb-10 mt-5">
         <h2 className="text-xl font-semibold mb-4">Edit Shelf</h2>
         <label className="block mb-2">Name</label>
         <input
@@ -614,6 +543,21 @@ function EditShelfForm({ shelf, onSave, onCancel, setShelf }) {
           value={shelf.rent}
           onChange={(e) => setShelf({ ...shelf, rent: parseInt(e.target.value) })}
         />
+        <label className="block mb-2">Event Type</label>
+        <select
+          className="border px-3 py-2 w-full rounded mb-3"
+          value={shelf.event_type}
+          onChange={(e) => setShelf({ ...shelf, event_type: e.target.value })}
+        >
+          <option value="Retail / Pop-up store">Retail / Pop-up store</option>
+          <option value="Art Exhibit / Gallery">Art Exhibit / Gallery</option>
+          <option value="Corporate Event">Corporate Event</option>
+          <option value="Workshop / Seminar">Workshop / Seminar</option>
+          <option value="Food / Beverage Tasting">Food / Beverage Tasting</option>
+          <option value="Book / Art Launch">Book / Art Launch</option>
+          <option value="Other">Other</option>
+        </select>
+
         <label className="block mb-2">Image</label>
         <input
           type="file"
@@ -655,7 +599,7 @@ function EditShelfForm({ shelf, onSave, onCancel, setShelf }) {
         </label>
 
         <div className="flex gap-2">
-          <button onClick={onSave} className="flex-1 bg-green-500 text-white py-2 rounded">Save</button>
+          <button onClick={() => onSave(shelf)} className="flex-1 bg-green-500 text-white py-2 rounded">Save</button>
           <button onClick={onCancel} className="flex-1 bg-gray-400 text-white py-2 rounded">Cancel</button>
         </div>
       </div>
@@ -669,6 +613,7 @@ function AddShelfForm({ onSave, onCancel }) {
     size: "",
     location: "",
     rent: 0,
+    event_type: "Retail / Pop-up store",
     img: "",
     visibility: "public",
     is_active: true,
@@ -677,7 +622,7 @@ function AddShelfForm({ onSave, onCancel }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow max-w-md w-full">
+      <div className="bg-white p-6 rounded-lg shadow max-w-md w-full h-full overflow-y-auto pt-20 pb-10 mt-5">
         <h2 className="text-xl font-semibold mb-4">Add New Shelf</h2>
         <label className="block mb-2">Name</label>
         <input
@@ -707,6 +652,21 @@ function AddShelfForm({ onSave, onCancel }) {
           value={newShelf.rent}
           onChange={(e) => setNewShelf({ ...newShelf, rent: parseInt(e.target.value) })}
         />
+        <label className="block mb-2">Event Type</label>
+        <select
+          className="border px-3 py-2 w-full rounded mb-3"
+          value={newShelf.event_type}
+          onChange={(e) => setNewShelf({ ...newShelf, event_type: e.target.value })}
+        >
+          <option value="Retail / Pop-up store">Retail / Pop-up store</option>
+          <option value="Art Exhibit / Gallery">Art Exhibit / Gallery</option>
+          <option value="Corporate Event">Corporate Event</option>
+          <option value="Workshop / Seminar">Workshop / Seminar</option>
+          <option value="Food / Beverage Tasting">Food / Beverage Tasting</option>
+          <option value="Book / Art Launch">Book / Art Launch</option>
+          <option value="Other">Other</option>
+        </select>
+
         <input
           type="file"
           accept="image/*"

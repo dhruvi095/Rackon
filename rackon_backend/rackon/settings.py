@@ -14,8 +14,8 @@ from pathlib import Path
 import os
 
 # settings.py
-RAZORPAY_KEY_ID = 'your_razorpay_key_id'
-RAZORPAY_KEY_SECRET = 'your_razorpay_key_secret'
+RAZORPAY_KEY_ID = 'rzp_test_OpXW1lnGMl3ijD'
+RAZORPAY_KEY_SECRET = 'DttsFGqzYGKlhsQKPslyTRSH'
 RAZORPAY_WEBHOOK_SECRET = "your_webhook_secret_here"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -60,12 +60,10 @@ ASGI_APPLICATION = "rackon.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
+
 
 from datetime import timedelta
 

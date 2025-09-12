@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from users.permissions import IsOwner
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from bookings.models import Booking
 
 
 class ShelfDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -101,10 +101,16 @@ class ShelfListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         qs = Shelf.objects.select_related("owner").prefetch_related("images")
+
         if not self.request.user.is_authenticated:
-            # Only truly available shelves for public
+            # Public user: show only publicly available shelves
             qs = qs.filter(currently_available=True)
+        else:
+            # Authenticated owner: show only their own shelves
+            qs = qs.filter(owner=self.request.user)
+
         return qs.order_by('-currently_available', '-created_at')
+
 
     def get_serializer_context(self):
         # Ensure request is available in serializer
@@ -120,8 +126,22 @@ class ShelfInventoryListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Only show inventory for shelves rented by the brand
-        return ShelfInventory.objects.filter(brand=self.request.user)
+        shelf_id = self.kwargs.get('shelf_id')
+        if not shelf_id:
+            return ShelfInventory.objects.none()  # Return empty if no shelf_id
+
+        user = self.request.user
+
+        # Check if user is owner of the shelf
+        try:
+            shelf = Shelf.objects.get(id=shelf_id)
+        except Shelf.DoesNotExist:
+            return ShelfInventory.objects.none()
+
+        if shelf.owner == user:  # Owner sees all inventory on their shelf
+            return ShelfInventory.objects.filter(shelf_id=shelf_id)
+        else:  # Brands see only their own products
+            return ShelfInventory.objects.filter(shelf_id=shelf_id, brand=user)
 
     def perform_create(self, serializer):
         # Ensure brand and shelf are assigned
@@ -160,3 +180,39 @@ def update_shelf(request, shelf_id):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
+
+
+
+class AvailableShelvesView(generics.ListAPIView):
+    serializer_class = ShelfSerializer
+    permission_classes = [AllowAny]  # or [IsAuthenticated] if you want only logged-in users
+
+    def get_queryset(self):
+        # ✅ Return shelves that are marked as available and active
+        return Shelf.objects.filter(
+            currently_available=True,
+            is_active=True
+        ).select_related("owner").prefetch_related("images")
+
+
+class BrandActiveShelves(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        bookings = Booking.objects.filter(
+            brand=user,
+            status="accepted"
+        ).values_list("shelf_id", flat=True)
+
+        if not bookings:
+            return Response([])  # Return empty list early
+
+        shelves = Shelf.objects.filter(
+            id__in=bookings,
+            is_active=True,
+        ).distinct()
+
+        serializer = ShelfSerializer(shelves, many=True)
+        return Response(serializer.data)

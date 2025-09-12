@@ -16,6 +16,7 @@ class Booking(models.Model):
         ('rejected', 'Rejected'),
         ('cancelled', 'Cancelled'),
         ('expired', 'Expired'),
+        
     )
 
     shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE, related_name='bookings')

@@ -1,4 +1,5 @@
-# products/serializers.py
+
+from bookings.models import Booking
 from rest_framework import serializers
 from .models import Product
 
@@ -15,3 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         read_only_fields = ['brand', 'created_at', 'updated_at']
+
+    def get_quantity_sold(self, obj):
+        # Example: if you track sales in an Order model
+        return obj.orders.aggregate(total=models.Sum("quantity"))["total"] or 0
