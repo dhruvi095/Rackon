@@ -2,6 +2,11 @@
 from rest_framework import generics, permissions
 from .models import Product
 from .serializers import ProductSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from products.services import record_sale
 
 
 class ProductListCreateView(generics.ListCreateAPIView):
@@ -38,3 +43,26 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.role == "owner":
             return Product.objects.filter(shelf__owner=user)
         return Product.objects.filter(brand=user)
+
+
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def sell_product(request, product_id):
+    sold_qty = int(request.data.get("sold_qty", 0))
+    if sold_qty <= 0:
+        return Response({"error": "Invalid sold quantity"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        product = record_sale(product_id, sold_qty)
+    except ValueError as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({
+        "id": product.id,
+        "product_name": product.product_name,
+        "quantity_stored": product.quantity_stored,
+        "quantity_sold": product.quantity_sold,
+        "price_per_unit": str(product.price_per_unit),
+    }, status=status.HTTP_200_OK)

@@ -6,8 +6,8 @@ class IsRetailerShelfOwner(BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        # Only shelf owners (retailers) can update booking status
-        return obj.shelf.owner == request.user and getattr(request.user, "is_retailer", False)
+        print("🔎 DEBUG Booking:", obj.id, "Shelf owner:", getattr(obj.shelf, "owner", None), "Request user:", request.user)
+        return getattr(obj.shelf, "owner", None) == request.user 
 
 
 class IsBookingOwnerOrReadOnly(BasePermission):

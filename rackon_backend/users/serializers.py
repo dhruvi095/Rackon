@@ -19,9 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_profile_image(self, obj):
         request = self.context.get("request")
-        if obj.profile_image:
+        if not obj.profile_image:
+            return None
+        if request:
             return request.build_absolute_uri(obj.profile_image.url)
-        return request.build_absolute_uri('/media/defaults/default_avatar.png')
+        return obj.profile_image.url  # fallback (relative URL)
 
     def create(self, validated_data):
         user = User(

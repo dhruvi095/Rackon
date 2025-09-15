@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from .models import Booking
 from rest_framework.exceptions import PermissionDenied
-from .serializers import BookingSerializer, BookingStatusSerializer
+from .serializers import *
 from .permissions import IsBookingOwnerOrReadOnly, IsRetailerShelfOwner
 from django.utils.timezone import now
 from django.db.models import Prefetch
@@ -9,6 +9,7 @@ from shelves.models import Shelf
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 # 👇 Import role-based permissions
 from users.permissions import IsOwner, IsBrand
@@ -17,6 +18,11 @@ from users.permissions import IsOwner, IsBrand
 class BookingListCreateView(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return BookingCreateSerializer  
+        return BookingSerializer
 
     def get_queryset(self):
         today = now().date()
@@ -70,14 +76,32 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
 
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from .models import Booking
+from .serializers import BookingStatusSerializer, BookingSerializer
+from .permissions import IsRetailerShelfOwner
+
+
 class BookingStatusUpdateView(generics.UpdateAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingStatusSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner, IsRetailerShelfOwner]
-    # ✅ Only owners can update booking status
+    permission_classes = [permissions.IsAuthenticated, IsRetailerShelfOwner]
 
-    def perform_update(self, serializer):
-        serializer.save()
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        # Validate and save status change
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # ✅ Return full booking object after update
+        return Response(
+            BookingSerializer(instance, context={'request': request}).data,
+            status=status.HTTP_200_OK
+        )
 
 
 class MyBookingsView(generics.ListAPIView):

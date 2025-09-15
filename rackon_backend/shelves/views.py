@@ -127,11 +127,11 @@ class ShelfInventoryListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         shelf_id = self.kwargs.get('shelf_id')
+        
         if not shelf_id:
             return ShelfInventory.objects.none()  # Return empty if no shelf_id
 
         user = self.request.user
-
         # Check if user is owner of the shelf
         try:
             shelf = Shelf.objects.get(id=shelf_id)

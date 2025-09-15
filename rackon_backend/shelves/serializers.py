@@ -57,35 +57,33 @@ class SimpleShelfSerializer(serializers.ModelSerializer):
         model = Shelf
         fields = ['id', 'name', 'location', 'rent']
 
+# shelves/serializers.py
+
 class ShelfInventorySerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
+    product = ProductSerializer()
     product_id = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all(), 
-        source='product', 
+        queryset=Product.objects.all(),
+        source='product',
         write_only=True
     )
     shelf = SimpleShelfSerializer(read_only=True)
     brand = SimpleUserSerializer(read_only=True)
 
-    # Flatten important fields for easier frontend consumption
+    # Flatten important fields
     shelf_name = serializers.CharField(source='shelf.name', read_only=True)
     brand_name = serializers.CharField(source='brand.username', read_only=True)
+    product_name = serializers.CharField(source='product.product_name', read_only=True)
 
     quantity_stored = serializers.IntegerField(source='quantity', read_only=True)
     quantity_sold = serializers.IntegerField(source='product.quantity_sold', read_only=True)
-    price_per_unit = serializers.DecimalField(
-        source='product.price_per_unit', 
-        max_digits=10, 
-        decimal_places=2, 
-        read_only=True
-    )
+    price_per_unit = serializers.DecimalField(source='product.price_per_unit', max_digits=10, decimal_places=2, read_only=True)
     total_payment = serializers.SerializerMethodField()
 
     class Meta:
         model = ShelfInventory
         fields = [
             'id', 'shelf', 'shelf_name', 'brand', 'brand_name',
-            'product', 'product_id',
+            'product', 'product_id', 'product_name',
             'quantity_stored', 'quantity_sold', 'price_per_unit', 'total_payment',
             'created_at', 'updated_at'
         ]
@@ -93,3 +91,16 @@ class ShelfInventorySerializer(serializers.ModelSerializer):
 
     def get_total_payment(self, obj):
         return float(obj.quantity * obj.product.price_per_unit)
+    
+    def create(self, validated_data):
+        product_data = validated_data.pop('product')
+        request = self.context.get("request")
+        brand = request.user
+
+        # Create Product
+        product = Product.objects.create(brand=brand, **product_data)
+
+        # Create ShelfInventory
+        inventory = ShelfInventory.objects.create(product=product, brand=brand, **validated_data)
+        return inventory
+

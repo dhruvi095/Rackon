@@ -53,4 +53,4 @@ class ShelfInventory(models.Model):
         unique_together = ('shelf', 'product', 'brand')
 
     def __str__(self):
-        return f"{self.product.name} on {self.shelf.name} ({self.quantity})"
+        return f"{self.product.product_name} on {self.shelf.name} ({self.quantity})"

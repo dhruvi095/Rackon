@@ -43,7 +43,7 @@ export default function useRazorpay() {
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.async = true;
       script.onload = () => {
-        console.log("✅ Razorpay v1 loaded");
+        // console.log("✅ Razorpay v1 loaded");
         setLoaded(true);
       };
       script.onerror = () => {

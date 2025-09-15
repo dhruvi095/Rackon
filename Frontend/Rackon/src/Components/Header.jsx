@@ -1,50 +1,76 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> 347d788501a250d344b416f6debff99664b513bf
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
-<<<<<<< HEAD
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const Navigate = useNavigate();
 
-=======
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
->>>>>>> 347d788501a250d344b416f6debff99664b513bf
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("access_token");
+      const userData = localStorage.getItem("user");
+
+      if (token && userData) {
+        setIsAuthenticated(true);
+        setUser(JSON.parse(userData));
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    };
+
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, []);
+
   const toggleHelp = () => {
-    if (isAuthenticated) {
-      setHelpOpen(!helpOpen);
-    }
+    if (isAuthenticated) setHelpOpen(!helpOpen);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+
     setIsAuthenticated(false);
+    setUser(null);
+    Navigate("/Login");
   };
-  const Navigate = useNavigate();
-  const handle = () => {
-    Navigate('/')
-  }
+
+  const handle = () => Navigate("/");
 
   return (
     <header className="w-full bg-white shadow-sm fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-
+          {/* Logo */}
           <div className="flex items-center">
-            <span className="text-2xl font-bold cursor-pointer" onClick={handle}>Rackon</span>
+            <span
+              className="text-2xl font-bold cursor-pointer"
+              onClick={handle}
+            >
+              Rackon
+            </span>
           </div>
 
+          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-6 text-black font-medium">
-            <a href="/Magazine" className="hover:text-green-600">Magazine</a>
+            <a href="/Magazine" className="hover:text-green-600">
+              Magazine
+            </a>
 
             <div className="relative group">
               <button
                 onClick={toggleHelp}
-                className={`flex items-center ${isAuthenticated ? "hover:text-green-600" : "text-gray-400 cursor-not-allowed"
-                  }`}
+                className={`flex items-center ${
+                  isAuthenticated
+                    ? "hover:text-green-600"
+                    : "text-gray-400 cursor-not-allowed"
+                }`}
               >
                 Help
                 <svg
@@ -52,44 +78,63 @@ const Header = () => {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
                     d="M19 9l-7 7-7-7"
-                  ></path>
+                  />
                 </svg>
               </button>
+
               {isAuthenticated && helpOpen && (
                 <div className="absolute left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
-                  <a href="/Contact" className="block px-4 py-2 text-black hover:bg-gray-100">Contact Us</a>
-                  <a href="/TC" className="block px-4 py-2 text-black hover:bg-gray-100">Terms & Conditions</a>
-                  <a href="/PP" className="block px-4 py-2 text-black hover:bg-gray-100">Privacy Policy</a>
-                  <a href="/FAQ" className="block px-4 py-2 text-black hover:bg-gray-100">FAQ’s</a>
+                  <a href="/Contact" className="block px-4 py-2 hover:bg-gray-100">
+                    Contact Us
+                  </a>
+                  <a href="/TC" className="block px-4 py-2 hover:bg-gray-100">
+                    Terms & Conditions
+                  </a>
+                  <a href="/PP" className="block px-4 py-2 hover:bg-gray-100">
+                    Privacy Policy
+                  </a>
+                  <a href="/FAQ" className="block px-4 py-2 hover:bg-gray-100">
+                    FAQ’s
+                  </a>
                 </div>
               )}
             </div>
 
+            {/* Login / Signup or User */}
             {!isAuthenticated ? (
               <>
-                <a href="/Sign" className="hover:text-green-600">Sign up</a>
-                <a href="/Login" className="hover:text-green-600">Log in</a>
+                <a href="/Sign" className="hover:text-green-600">
+                  Sign up
+                </a>
+                <a href="/Login" className="hover:text-green-600">
+                  Log in
+                </a>
               </>
             ) : (
-              <button
-                onClick={handleLogout}
-                className="px-4 py-1 rounded-md bg-green-600 text-white hover:bg-green-700"
-              >
-                Logout
-              </button>
+              <>
+                <span className="text-gray-600">
+                  {user?.username} ({user?.role})
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-1 rounded-md bg-green-600 text-white hover:bg-green-700"
+                >
+                  Logout
+                </button>
+              </>
             )}
           </nav>
 
+          {/* Mobile Hamburger */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100"
           >
             <svg
               className="h-6 w-6"
@@ -99,60 +144,89 @@ const Header = () => {
               stroke="currentColor"
             >
               {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               )}
             </svg>
           </button>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-sm">
           <nav className="flex flex-col space-y-2 px-4 py-3 text-black font-medium">
-            <a href="#" className="hover:text-green-600">Magazine</a>
+            <a href="/Magazine" className="hover:text-green-600">
+              Magazine
+            </a>
 
-            <details className="group" open={false}>
-              <summary
-                className={`flex items-center cursor-pointer ${isAuthenticated ? "hover:text-green-600" : "text-gray-400 cursor-not-allowed"
-                  }`}
-                onClick={(e) => {
-                  if (!isAuthenticated) e.preventDefault();
-                }}
-              >
-                Help
-                <svg
-                  className="ml-1 h-4 w-4 transition-transform group-open:rotate-180"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </summary>
-              {isAuthenticated && (
+            {isAuthenticated && (
+              <details className="group">
+                <summary className="flex items-center cursor-pointer hover:text-green-600">
+                  Help
+                  <svg
+                    className="ml-1 h-4 w-4 transition-transform group-open:rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </summary>
                 <div className="pl-4 mt-2 flex flex-col space-y-1">
-                  <a href="/Contact" className="block px-2 py-1 text-black hover:bg-gray-100 rounded">Contact Us</a>
-                  <a href="/TC" className="block px-2 py-1 text-black hover:bg-gray-100 rounded">Terms & Conditions</a>
-                  <a href="/PP" className="block px-2 py-1 text-black hover:bg-gray-100 rounded">Privacy Policy</a>
-                  <a href="/FAQ" className="block px-2 py-1 text-black hover:bg-gray-100 rounded">FAQ’s</a>
+                  <a href="/Contact" className="block px-2 py-1 hover:bg-gray-100 rounded">
+                    Contact Us
+                  </a>
+                  <a href="/TC" className="block px-2 py-1 hover:bg-gray-100 rounded">
+                    Terms & Conditions
+                  </a>
+                  <a href="/PP" className="block px-2 py-1 hover:bg-gray-100 rounded">
+                    Privacy Policy
+                  </a>
+                  <a href="/FAQ" className="block px-2 py-1 hover:bg-gray-100 rounded">
+                    FAQ’s
+                  </a>
                 </div>
-              )}
-            </details>
+              </details>
+            )}
+
             {!isAuthenticated ? (
               <>
-                <a href="/Sign" className="hover:text-green-600">Sign up</a>
-                <a href="/Login" className="hover:text-green-600">Log in</a>
+                <a href="/Sign" className="hover:text-green-600">
+                  Sign up
+                </a>
+                <a href="/Login" className="hover:text-green-600">
+                  Log in
+                </a>
               </>
             ) : (
-              <button
-                onClick={handleLogout}
-                className="px-4 py-1 mt-2 rounded-md bg-green-600 text-white hover:bg-green-700"
-              >
-                Logout
-              </button>
+              <>
+                <span className="text-gray-600 px-2">
+                  {user?.username} ({user?.role})
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-1 mt-2 rounded-md bg-green-600 text-white hover:bg-green-700"
+                >
+                  Logout
+                </button>
+              </>
             )}
           </nav>
         </div>

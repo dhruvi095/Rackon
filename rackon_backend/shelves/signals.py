@@ -1,13 +1,19 @@
-# shelves/signals.py
+from urllib import request
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from products.models import Product
 from .models import ShelfInventory
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from rest_framework.views import APIView
+from rest_framework.response import Response
+import logging
+logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender=Product)
 def update_shelf_inventory(sender, instance, created, **kwargs):
+    print("🔥 Signal fired for product:", instance.product_name)
+    logger.info(f"[SIGNAL] Product saved: {instance.product_name}, Shelf: {instance.shelf}, Created: {created}")
     shelf = instance.shelf
     brand = instance.brand
     if shelf:
@@ -20,6 +26,7 @@ def update_shelf_inventory(sender, instance, created, **kwargs):
         if not created:
             inventory.quantity = instance.quantity_stored
             inventory.save()
+        print("✅ ShelfInventory updated:", inventory.id)
 
 @receiver(post_delete, sender=Product)
 def delete_shelf_inventory(sender, instance, **kwargs):

@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_yasg',
     'users',
-    'shelves',
+    'shelves.apps.ShelvesConfig',
     'bookings',
     'payments',
     'notifications',

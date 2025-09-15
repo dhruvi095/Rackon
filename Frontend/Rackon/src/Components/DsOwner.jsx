@@ -5,11 +5,12 @@ function DsOwner() {
   const [shelves, setShelves] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, shelves, bookings, earnings, profile
-  const [imageFile, setImageFile] = useState(null);
+  // const [imageFile, setImageFile] = useState(null);
   const [editingShelf, setEditingShelf] = useState(null);
   const [addingShelf, setAddingShelf] = useState(false);
   const [inventoryShelf, setInventoryShelf] = useState(null); // Shelf whose inventory is open
   const [inventoryData, setInventoryData] = useState([]); // List of products stored in that shelf
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [profile, setProfile] = useState({
     name: "",
@@ -32,8 +33,23 @@ function DsOwner() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("New Booking via WebSocket:", data);
-      setBookings(prev => [...prev, data]);  // Real-time addition of new booking
+      // console.log("Booking update via WebSocket:", data);
+
+      // Ignore connection/system messages
+      if (!data.id) {
+        return;
+      }
+
+      setBookings((prev) => {
+        const index = prev.findIndex((b) => b.id === data.id);
+        if (index !== -1) {
+          const updated = [...prev];
+          updated[index] = { ...updated[index], ...data };
+          return updated;
+        } else {
+          return [...prev, data];
+        }
+      });
     };
 
     ws.onclose = () => console.log('WebSocket disconnected');
@@ -44,15 +60,20 @@ function DsOwner() {
   // --- UPDATE BOOKING STATUS ---
   const handleBookingUpdate = async (bookingId, newStatus) => {
     try {
-      await api.patch(`/bookings/${bookingId}/status/`, { status: newStatus });
+      const res = await api.patch(`/bookings/${bookingId}/status/`, { status: newStatus });
+      const updatedBooking = res.data; // ✅ full booking object
+
       setBookings((prev) =>
-        prev.map((b) => (b.id === bookingId ? { ...b, status: newStatus } : b))
+        prev.map((b) => (b.id === bookingId ? updatedBooking : b))
       );
+      // fetchBookings();
+
       alert(`Booking ${newStatus}`);
     } catch (err) {
       console.error("Error updating booking status:", err.response?.data || err);
     }
   };
+
 
 
   const fetchShelves = async () => {
@@ -73,7 +94,7 @@ function DsOwner() {
     }
   };
 
-  
+
 
   const fetchProfile = async () => {
     try {
@@ -84,7 +105,7 @@ function DsOwner() {
         profileData.image = `http://localhost:8000${profileData.image}`;
       }
 
-      console.log("Profile Fetched:", profileData);
+      // console.log("Profile Fetched:", profileData);
       setProfile(profileData);
     } catch (err) {
       console.error("Error fetching profile:", err);
@@ -190,7 +211,7 @@ function DsOwner() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("Real-time inventory update:", data);
+      // console.log("Real-time inventory update:", data);
 
       setInventoryData((prev) => {
         const index = prev.findIndex((item) => item.id === data.id);
@@ -214,6 +235,7 @@ function DsOwner() {
     setInventoryShelf(shelf); // triggers the useEffect below
     try {
       const res = await api.get(`/shelves/${shelf.id}/inventory/`);
+      // console.log("Fetched inventory:", res.data);
       setInventoryData(res.data);
     } catch (err) {
       console.error("Error fetching inventory:", err);
@@ -223,9 +245,17 @@ function DsOwner() {
 
 
 
-  const totalEarnings = bookings.reduce((sum, b) => sum + b.amount, 0);
-  const upcomingBookings = bookings.filter(b => new Date(b.startDate) >= new Date());
+  const totalEarnings = bookings.reduce((sum, b) => {
+    if (b.status === "accepted" && b.payment_status === "completed") {
+      return sum + (b.amount || 0);
+    }
+    return sum;
+  }, 0);
 
+
+  const upcomingBookings = bookings.filter(
+    b => new Date(b.start_date) >= new Date()
+  );
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -250,7 +280,7 @@ function DsOwner() {
           </nav>
         </div>
 
-        <button className="py-2 px-3 bg-red-600 text-white rounded hover:bg-red-700">Logout</button>
+        
       </aside>
       <main className="flex-1 p-6">
         {activeTab === "dashboard" && (
@@ -338,6 +368,7 @@ function DsOwner() {
                     <th className="py-2 px-4">End Date</th>
                     <th className="py-2 px-4">Amount</th>
                     <th className="py-2 px-4">Status</th>
+                    <th className="py-2 px-4">Activity</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -345,9 +376,10 @@ function DsOwner() {
                     <tr key={b.id} className="border-b">
                       <td className="py-2 px-4">{b.shelf?.name || "N/A"}</td>
                       <td className="py-2 px-4">{b.renter?.username || "N/A"}</td>
-                      <td className="py-2 px-4">{new Date(b.startDate).toLocaleDateString()}</td>
-                      <td className="py-2 px-4">{new Date(b.endDate).toLocaleDateString()}</td>
+                      <td className="py-2 px-4">{new Date(b.start_date).toLocaleDateString()}</td>
+                      <td className="py-2 px-4">{new Date(b.end_date).toLocaleDateString()}</td>
                       <td className="py-2 px-4">₹{b.amount || 0}</td>
+                      <td className="py-2 px-4">{b.status}</td>
                       <td className="py-2 px-4 flex gap-2 items-center">
                         {b.status === "pending" ? (
                           <>
@@ -392,19 +424,33 @@ function DsOwner() {
                     <th className="py-2 px-4">Renter</th>
                     <th className="py-2 px-4">Amount</th>
                     <th className="py-2 px-4">Status</th>
+                    <th className="py-2 px-4">Payment</th>
                   </tr>
                 </thead>
                 <tbody>
                   {bookings.map((b) => (
                     <tr key={b.id} className="border-b">
                       <td className="py-2 px-4">{b.id}</td>
-                      <td className="py-2 px-4">{b.shelf}</td>
-                      <td className="py-2 px-4">{b.renter}</td>
+                      <td>{b.shelf?.name}</td>
+                      <td>{b.renter?.username}</td>
                       <td className="py-2 px-4">₹{b.amount}</td>
                       <td className="py-2 px-4">{b.status}</td>
+                      <td className="py-2 px-4">
+                        <span
+                          className={`px-2 py-1 rounded text-white text-xs ${b.payment_status === "paid"
+                            ? "bg-green-500"
+                            : b.payment_status === "pending"
+                              ? "bg-yellow-500"
+                              : "bg-gray-500"
+                            }`}
+                        >
+                          {b.payment_status || "N/A"}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             </div>
           </div>
@@ -484,7 +530,7 @@ function DsOwner() {
                   <tbody>
                     {inventoryData.map((item) => (
                       <tr key={item.id} className="border-b">
-                        <td className="py-2 px-4">{item.product_name}</td>
+                        <td className="py-2 px-4">{item.product_name || "N/A"}</td>
                         <td className="py-2 px-4">{item.quantity_stored}</td>
                         <td className="py-2 px-4">{item.quantity_sold}</td>
                         <td className="py-2 px-4">₹{item.total_payment}</td>
@@ -496,7 +542,7 @@ function DsOwner() {
 
               <button
                 onClick={closeInventory}
-                className="mt-4 bg-gray-400 text-white py-2 px-4 rounded"
+                className="mt-4 bg-gray-400 text-white py-2 px-4 rounded mt-10"
               >
                 Close
               </button>

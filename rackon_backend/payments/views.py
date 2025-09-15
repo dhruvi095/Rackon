@@ -162,12 +162,14 @@ class VerifyPaymentView(APIView):
                 return Response({"detail": "Payment not found"}, status=status.HTTP_404_NOT_FOUND)
 
         booking = Booking.objects.get(id=booking_id)
+
+        # ✅ update both status and payment_status
         booking.payment_status = "completed"
+        booking.status = "accepted"   # <-- add this
         booking.save()
 
         Payment.objects.filter(payment_gateway_id=razorpay_order_id).update(
             status="completed",
-            payment_gateway_id=razorpay_order_id,
             razorpay_payment_id=razorpay_payment_id
         )
 
